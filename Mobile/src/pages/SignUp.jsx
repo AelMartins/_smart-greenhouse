@@ -4,48 +4,67 @@ import { useNavigation } from '@react-navigation/native'
 import { View, StyleSheet, TextInput, TouchableOpacity, Text } from 'react-native';
 
 
-const Login = () => {
+const SignUp = () => {
+    const [name, setName] = React.useState('');
+    const [phone, setPhone] = React.useState('');
+    const [cpf, setCpf] = React.useState('');
     const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
+    const [course, setCourse] = React.useState('');
 
-    const navigation = useNavigation();
+    const navigation = useNavigation()
 
-    const handleLogin = () => {
-        navigation.navigate('Main');
-    };
+    const handleSignIn = () => {
+        navigation.navigate('SignIn')
+    }
 
-    const register = () => {
-        // navigation.navigate('Register');
-    };
 
     return (
         <View style={styles.view}>
             <Container style={styles.container}>
-                <Text style={styles.loginText}>LOGIN</Text>
+                <Text style={styles.registerText}>Cadastro</Text>
+
+                <TextInput
+                    style={styles.input}
+                    value={name}
+                    onChangeText={setName}
+                    placeholder="Nome"
+                />
+
+                <TextInput
+                    style={styles.input}
+                    value={phone}
+                    onChangeText={setPhone}
+                    placeholder="Telefone"
+                />
+
+                <TextInput
+                    style={styles.input}
+                    value={cpf}
+                    onChangeText={setCpf}
+                    placeholder="CPF"
+                />
 
                 <TextInput
                     style={styles.input}
                     value={email}
                     onChangeText={setEmail}
-                    placeholder="Enter your e-mail"
+                    placeholder="E-mail"
                 />
 
                 <TextInput
                     style={styles.input}
-                    value={password}
-                    onChangeText={setPassword}
-                    placeholder="Password"
+                    value={course}
+                    onChangeText={setCourse}
+                    placeholder="Curso"
                 />
 
-                <TouchableOpacity onPress={() => handleLogin()} style={styles.button}>
-                    <Text style={styles.buttonText}>Entrar</Text>
+                <TouchableOpacity onPress={() => handleSignIn()} style={styles.button}>
+                    <Text style={styles.buttonText}>Inscrever-se</Text>
                 </TouchableOpacity>
-
-                <Text style={styles.subLoginText} onPress={() => register()}>Ainda não tem uma conta? Faça cadastro</Text>
             </Container>
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     view: {
@@ -58,7 +77,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         marginBottom: 200
     },
-    loginText: {
+    registerText: {
         fontSize: 40,
         color: '#1a6eff',
         marginTop: 0,
@@ -74,11 +93,6 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingHorizontal: 10,
     },
-    subLoginText: {
-        fontSize: 16,
-        color: '#000000',
-        marginTop: 20,
-    },
     button: {
         backgroundColor: '#1a6eff',
         paddingVertical: 10,
@@ -92,4 +106,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Login;
+export default SignUp;
