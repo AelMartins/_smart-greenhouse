@@ -1,7 +1,7 @@
 import React from 'react';
-import { Container } from '../Styles';
+import { Container, Card, ButtonCard, Button, ButtonText, TextInput } from '../Styles';
 import { useNavigation } from '@react-navigation/native'
-import { View, StyleSheet, TextInput, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 
 
 const SignIn = () => {
@@ -11,7 +11,12 @@ const SignIn = () => {
     const navigation = useNavigation();
 
     const handleSignIn = () => {
-        navigation.navigate('Home');
+        if (email === '' && password === '') {
+            navigation.navigate('Home');
+
+        } else {
+            alert('E-mail e/ou senha incorretos!')
+        }
     };
 
     const handleSignUp = () => {
@@ -19,78 +24,71 @@ const SignIn = () => {
     };
 
     return (
-        <View style={styles.view}>
-            <Container style={styles.container}>
+        <Container>
+            <Card>
+
                 <Text style={styles.loginText}>Login</Text>
 
                 <TextInput
-                    style={styles.input}
                     value={email}
+                    style={styles.input}
                     onChangeText={setEmail}
-                    placeholder="Enter your e-mail"
+                    placeholder="Digite seu e-mail"
                 />
 
                 <TextInput
-                    style={styles.input}
                     value={password}
+                    style={styles.input}
                     onChangeText={setPassword}
-                    placeholder="Password"
+                    placeholder="Senha"
                 />
 
-                <TouchableOpacity onPress={() => handleSignIn()} style={styles.button}>
-                    <Text style={styles.buttonText}>Entrar</Text>
-                </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => handleSignUp()} style={styles.button}>
-                    <Text style={styles.buttonText}>Inscreva-se</Text>
-                </TouchableOpacity>
-            </Container>
-        </View>
-    );
-};
+                <ButtonCard style={styles.buttonCard}>
+                    <Button style={styles.button('signin')} onPress={() => handleSignIn()}>
+                        <ButtonText style={styles.buttonText('signin')}>Entrar</ButtonText>
+                    </Button>
+
+                    <Button style={styles.button()} onPress={() => handleSignUp()}>
+                        <ButtonText style={styles.buttonText()}>Inscreva-se</ButtonText>
+                    </Button>
+                </ButtonCard>
+
+            </Card>
+
+        </Container>
+    )
+}
 
 const styles = StyleSheet.create({
-    view: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    container: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        marginBottom: 200
-    },
     loginText: {
         fontSize: 40,
-        color: '#1a6eff',
+        color: '#33d100',
         marginTop: 0,
         marginBottom: 20,
         fontWeight: 'bold',
     },
     input: {
-        width: '80%',
-        height: 40,
-        borderColor: '#070099',
-        borderWidth: 1,
-        borderRadius: 5,
-        marginBottom: 10,
-        paddingHorizontal: 10,
+        borderColor: '#33d100',
+        borderWidth: 2,
     },
-    subSignInText: {
-        fontSize: 16,
-        color: '#000000',
-        marginTop: 20,
+    buttonCard: {
+        marginTop: 150,
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end',
     },
-    button: {
-        backgroundColor: '#1a6eff',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 5,
+    button: (type) => {
+        return {
+            backgroundColor: type === 'signin' ? '#fff' : '#33d100',
+            borderColor: type === 'signin' ? '#33d100' : undefined,
+            borderWidth: type === 'signin' ? 2 : undefined,
+            width: type === 'signin' ? 100 : 150,
+        }
     },
-    buttonText: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#fff',
+    buttonText: (type) => {
+        return {
+            color: type === 'signin' ? '#33d100' : '#fff'
+        }
     },
 });
 
