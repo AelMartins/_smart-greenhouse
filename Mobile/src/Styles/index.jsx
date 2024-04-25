@@ -21,33 +21,45 @@ const ButtonCard = styled.View`
 `;
 
 const Button = styled.TouchableOpacity`
-  width: 20%;
-  height: 45px;
+  height: 50px;
   display: flex;
+  padding: 5px 50px;
   margin: 3px auto;
   border-radius: 10px;
   align-items: center;
-  border-color: green;
   justify-content: center;
-  background-color: blue;
 `;
 
 const ButtonText = styled.Text`
-  font-size: 16px;
+  font-size: 20px;
   font-weight: bold;
 `;
 
 const TextInput = styled.TextInput.attrs({
-  placeholderTextColor: '#1a6b00',
+  placeholderTextColor: '#929292',
 })`
   width: 75%;
   margin: 5px;
   color: black;
-  height: 40px;
-  font-size: 14px;
-  max-height: 45px;
+  height: 50px;
+  font-size: 17px;
   border-radius: 10px;
+  background-color: #fff;
 `;
+
+const LabelText = styled.Text`
+width: 75%;
+display: flex;
+font-size: 20px;
+margin-top: 25px;
+font-weight: bold;
+align-items: center;
+justify-content: center;
+`;
+
+
+
+
 
 
 
@@ -95,18 +107,10 @@ const CardInfos = styled.View`
   padding-left: 20px;
 `;
 
-
-const LabelText = styled.Text`
-  font-size: 16px;
-  color: #333;
-  font-weight: bold;
-  margin: 5px;
-`;
-
 const InfoText = styled.Text`
   font-size: 15px;
   color: #272b33;
   margin-bottom: 15px;
 `;
 
-export { Container, Card, ButtonCard, Button, ButtonText, TextInput }
+export { Container, Card, ButtonCard, Button, ButtonText, TextInput, LabelText }
