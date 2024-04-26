@@ -1,15 +1,14 @@
-import React from 'react';
-import { Card, ButtonCard, Button, ButtonText, TextInput, LabelText } from '../Styles';
-import { useNavigation } from '@react-navigation/native'
+import { useState } from 'react';
+import { BlurView } from '@react-native-community/blur';
+import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, ImageBackground, Text } from 'react-native';
-import { BlurView } from '@react-native-community/blur'
+import { Card, ButtonCard, Button, ButtonText, TextInput, LabelText } from '../Styles';
 
 
 const SignIn = () => {
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [error, setError] = React.useState('');
-
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const navigation = useNavigation();
 
@@ -35,11 +34,9 @@ const SignIn = () => {
             <BlurView
                 style={styles.blur}
                 blurType="light" // "dark" | "light" | "xlight")
-                blurAmount={5} // Define o valor do desfoque (valor padrão é 10)
+                blurAmount={3} // Define o valor do desfoque (valor padrão é 10)
             >
-
-
-                <Card>
+                <Card style={styles.card}>
                     <LabelText style={styles.labelText}>E-mail</LabelText>
                     <TextInput
                         value={email}
@@ -82,25 +79,29 @@ const styles = StyleSheet.create({
     },
     blur: {
         flex: 1,
-        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+    },
+    card: {
+        flex: 1,
     },
     loginText: {
         fontSize: 40,
-        color: '#39eb00',
+        color: '#78d600',
         marginTop: 0,
         marginBottom: 20,
         fontWeight: 'bold',
     },
     textInput: {
-        borderColor: '#39eb00',
+        borderColor: '#78d600',
         borderWidth: 3,
         backgroundColor: 'rgba(255,255,255,0.93)'
     },
     labelText: {
-        color: '#49ff0f',
+        color: '#78d600',
         textShadowColor: 'black',
         textShadowOffset: { width: -2, height: 2 }, // Deslocamento da sombra
-        textShadowRadius: 8,
+        textShadowRadius: 4,
     },
     buttonCard: {
         marginTop: 150,
@@ -109,14 +110,14 @@ const styles = StyleSheet.create({
     },
     button: (type) => {
         return {
-            backgroundColor: type === 'signin' ? 'rgba(255,255,255,0.93)' : '#39eb00',
-            borderColor: '#39eb00',
+            backgroundColor: type === 'signin' ? 'rgba(255,255,255,0.93)' : '#78d600',
+            borderColor: '#78d600',
             borderWidth: 3,
         }
     },
     buttonText: (type) => {
         return {
-            color: type === 'signin' ? '#39eb00' : '#fff'
+            color: type === 'signin' ? '#78d600' : '#fff'
         }
     },
     errorInput: {

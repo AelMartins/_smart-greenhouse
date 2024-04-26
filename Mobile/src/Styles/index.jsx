@@ -13,6 +13,7 @@ const Card = styled.View`
   width: 100%;
   align-items: center;
   border-radius: 30px;
+  justify-content: center;
 `;
 
 const ButtonCard = styled.View`
