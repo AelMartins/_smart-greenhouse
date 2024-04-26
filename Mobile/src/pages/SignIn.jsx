@@ -8,6 +8,8 @@ import { BlurView } from '@react-native-community/blur'
 const SignIn = () => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [error, setError] = React.useState('');
+
 
     const navigation = useNavigation();
 
@@ -16,7 +18,8 @@ const SignIn = () => {
             navigation.navigate('Home');
 
         } else {
-            alert('E-mail e/ou senha incorretos!')
+            setError('E-mail e/ou senha incorretos!');
+            setTimeout(() => setError(''), 5000)
         }
     };
 
@@ -32,13 +35,15 @@ const SignIn = () => {
             <BlurView
                 style={styles.blur}
                 blurType="light" // "dark" | "light" | "xlight")
-                blurAmount={3} // Define o valor do desfoque (valor padrão é 10)
+                blurAmount={5} // Define o valor do desfoque (valor padrão é 10)
             >
+
+
                 <Card>
                     <LabelText style={styles.labelText}>E-mail</LabelText>
                     <TextInput
                         value={email}
-                        style={styles.textInput}
+                        style={[styles.textInput, error && styles.errorInput]}
                         onChangeText={setEmail}
                         placeholder="Digite seu e-mail"
                     />
@@ -46,12 +51,13 @@ const SignIn = () => {
                     <LabelText style={styles.labelText}>Senha</LabelText>
                     <TextInput
                         value={password}
-                        style={styles.textInput}
+                        style={[styles.textInput, error && styles.errorInput]}
                         onChangeText={setPassword}
                         placeholder="Senha"
                         secureTextEntry={true}
                     />
 
+                    {error && <Text style={styles.errorText}>{error}</Text>}
 
                     <ButtonCard style={styles.buttonCard}>
                         <Button style={styles.button('signin')} onPress={() => handleSignIn()}>
@@ -112,6 +118,13 @@ const styles = StyleSheet.create({
         return {
             color: type === 'signin' ? '#39eb00' : '#fff'
         }
+    },
+    errorInput: {
+        borderColor: 'red',
+    },
+    errorText: {
+        color: 'red',
+        marginBottom: 10,
     },
 });
 
