@@ -9,6 +9,13 @@ const Container = styled.View`
   justify-content: center;
 `;
 
+const ContainerImage = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0,0,0,0);
+`;
+
 const Card = styled.View`
   width: 100%;
   align-items: center;
@@ -58,6 +65,16 @@ align-items: center;
 justify-content: center;
 `;
 
+const IconButton = ({ onPress, iconName, text }) => {
+  return (
+    <ButtonContainer onPress={onPress}>
+      <Ionicons name={iconName} size={24} color="white" />
+      <ButtonText>{text}</ButtonText>
+    </ButtonContainer>
+  );
+};
+
+const Image = styled.Image``;
 
 
 
@@ -92,26 +109,15 @@ const List = styled.FlatList`
   margin-top: 20px;
 `;
 
-
-
-
-const CardContent = styled.View`
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-`;
-
-const CardInfos = styled.View`
-  margin-top: 10px;
-  width: 100%;
-  align-items: left;
-  padding-left: 20px;
-`;
-
-const InfoText = styled.Text`
-  font-size: 15px;
-  color: #272b33;
-  margin-bottom: 15px;
-`;
-
-export { Container, Card, ButtonCard, Button, ButtonText, TextInput, LabelText }
+export {
+  Container,
+  ContainerImage,
+  Card,
+  ButtonCard,
+  Button,
+  ButtonText,
+  TextInput,
+  LabelText,
+  IconButton,
+  Image,
+}

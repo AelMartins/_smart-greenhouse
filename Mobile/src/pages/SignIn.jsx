@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { BlurView } from '@react-native-community/blur';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, ImageBackground, Text } from 'react-native';
 import { Card, ButtonCard, Button, ButtonText, TextInput, LabelText } from '../Styles';
@@ -30,44 +29,39 @@ const SignIn = () => {
         <ImageBackground
             source={require('../images/background.jpg')} // Substitua pelo caminho da sua imagem
             style={styles.background}
+            blurRadius={3}
         >
-            <BlurView
-                style={styles.blur}
-                blurType="light" // "dark" | "light" | "xlight")
-                blurAmount={3} // Define o valor do desfoque (valor padrão é 10)
-            >
-                <Card style={styles.card}>
-                    <LabelText style={styles.labelText}>E-mail</LabelText>
-                    <TextInput
-                        value={email}
-                        style={[styles.textInput, error && styles.errorInput]}
-                        onChangeText={setEmail}
-                        placeholder="Digite seu e-mail"
-                    />
+            <Card style={styles.card}>
+                <LabelText style={styles.labelText}>E-mail</LabelText>
+                <TextInput
+                    value={email}
+                    style={[styles.textInput, error && styles.errorInput]}
+                    onChangeText={setEmail}
+                    placeholder="Digite seu e-mail"
+                />
 
-                    <LabelText style={styles.labelText}>Senha</LabelText>
-                    <TextInput
-                        value={password}
-                        style={[styles.textInput, error && styles.errorInput]}
-                        onChangeText={setPassword}
-                        placeholder="Senha"
-                        secureTextEntry={true}
-                    />
+                <LabelText style={styles.labelText}>Senha</LabelText>
+                <TextInput
+                    value={password}
+                    style={[styles.textInput, error && styles.errorInput]}
+                    onChangeText={setPassword}
+                    placeholder="Senha"
+                    secureTextEntry={true}
+                />
 
-                    {error && <Text style={styles.errorText}>{error}</Text>}
+                {error && <Text style={styles.errorText}>{error}</Text>}
 
-                    <ButtonCard style={styles.buttonCard}>
-                        <Button style={styles.button('signin')} onPress={() => handleSignIn()}>
-                            <ButtonText style={styles.buttonText('signin')}>Entrar</ButtonText>
-                        </Button>
+                <ButtonCard style={styles.buttonCard}>
+                    <Button style={styles.button('signin')} onPress={() => handleSignIn()}>
+                        <ButtonText style={styles.buttonText('signin')}>Entrar</ButtonText>
+                    </Button>
 
-                        <Button style={styles.button()} onPress={() => handleSignUp()}>
-                            <ButtonText style={styles.buttonText()}>Inscreva-se</ButtonText>
-                        </Button>
-                    </ButtonCard>
+                    <Button style={styles.button()} onPress={() => handleSignUp()}>
+                        <ButtonText style={styles.buttonText()}>Inscreva-se</ButtonText>
+                    </Button>
+                </ButtonCard>
 
-                </Card>
-            </BlurView>
+            </Card>
         </ImageBackground>
     )
 }
@@ -76,11 +70,6 @@ const styles = StyleSheet.create({
     background: {
         flex: 1,
         justifyContent: 'center',
-    },
-    blur: {
-        flex: 1,
-        alignItems: 'center',
-        height: '100%',
     },
     card: {
         flex: 1,
