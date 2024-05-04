@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import { Text } from "react-native"
-import { Container, ContainerImage, Image } from '../Styles';
 import { StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Container, ContainerImage, Image } from '../Styles';
 
 
 
@@ -18,7 +18,6 @@ const Home = () => {
     //     await setDataPlant(data)
     //     console.log(dataPlant)
     // })
-
 
     return (
         <Container style={styles.background}>

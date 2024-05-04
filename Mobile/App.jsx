@@ -1,12 +1,13 @@
 import React from 'react';
-// import { SignIn } from './src/pages'
 import Home from './src/pages/Home.jsx'
+import ViewPager from './src/pages/ViewPager.jsx'
+import BottomTabs from './src/pages/BottomTabs.jsx'
+import Chart from './src/pages/Chart.jsx'
 import { StyleSheet } from 'react-native';
 import SignIn from './src/pages/SignIn.jsx'
 import SignUp from './src/pages/SignUp.jsx'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-// import { Button } from './src/Styles'
 
 
 const Stack = createStackNavigator();
@@ -24,6 +25,9 @@ function App() {
         {newScreen('SignIn', SignIn, { headerShown: false })}
         {newScreen('SignUp', SignUp, { title: '' })}
         {newScreen('Home', Home, { title: 'Resumo Inicial' })}
+        {newScreen('ViewPager', ViewPager, { title: 'Resumo Inicial' })}
+        {newScreen('BottomTabs', BottomTabs, { title: 'Resumo Inicial' })}
+        {newScreen('Chart', Chart, { title: 'Gráfico' })}
       </Stack.Navigator>
     </NavigationContainer>
   )
