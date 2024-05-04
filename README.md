@@ -18,7 +18,7 @@ Data to be collected:
 
 ## Technologies:
 
-|  |  |
+|               |                                                                              |
 | ------------- | ---------------------------------------------------------------------------- |
 | React         | Web Development                                                              |
 | React Native  | Mobile Development                                                           |
@@ -44,12 +44,17 @@ Link de protótipo: [smart-greenhouse-desktop](https://www.figma.com/proto/4HkQC
 
 
 Link de protótipo: [smart-greenhouse-mobile](https://www.figma.com/proto/4HkQCk0Tb0f7qK1p9p9lZX/Ael-Martins's-team-library?type=design&node-id=411-55&t=D4mEFMmjXQiPkr1v-0&scaling=scale-down&page-id=411%3A2)
+
+## Database diagram:
+
+![database-diagram.png](./Documentation/DATABASE_DIAGRAM.png)
+
 ***
 
 ## Participants:
 
 [ João Pedro Borges Araújo		      | 1091392223001 ]
 
-[ Samuel Luiz Martins dos Santos 		| 1091392223033 ]
+[ Samuel Luiz Martins dos Santos 	  | 1091392223033 ]
 
-[ Victor Hugo Moro Pires 			      | 1091392223018 ]
+[ Victor Hugo Moro Pires 			  | 1091392223018 ]
