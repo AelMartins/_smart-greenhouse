@@ -1,40 +1,71 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart } from 'react-native-chart-kit';
-import { StyleSheet, Text } from 'react-native';
-import { Container } from '../Styles';
+import { StyleSheet, Text, View } from 'react-native';
+import { Container, ContainerChart, HeaderChart } from '../Styles';
+import { Picker } from '@react-native-picker/picker';
+
 
 
 const DynamicChart = () => {
     const [data, setData] = useState([0, 0, 0, 0, 0])
     const [labels, setLabels] = useState(['', '', '', '', ''])
+    const [selectedChartType, setSelectedChartType] = useState('line');
+
+
+    const setTypeChart = (itemValue) => {
+        let data
+        if (itemValue === "weight") {
+            data = [100, 750, 450, 150, 325, 200, 250, 650, 840, 300, 523, 400]
+
+        } else if (itemValue === "lighting") {
+            data = [437, 123, 150, 325, 650, 840, 300, 523, 400]
+
+        } else if (itemValue === "humidity") {
+            data = [86, 12, 150, 53, 20, 523, 400]
+
+        } else if (itemValue === "temperature") {
+            data = [76, 750, 250, 650, 840, 300, 523, 400]
+
+        }
+        setData(data)
+        setLabels(['seg', 'ter', 'qua', 'qui', 'sex', 'sab', 'dom'])
+        setSelectedChartType(itemValue)
+    }
+
+
 
     useEffect(() => {
-        const fetchData = async () => {
-            const response = { data: [100, 750, 450, 150, 325, 200, 250, 650, 840, 300, 350, 400], labels: ['seg', 'ter', 'qua', 'qui', 'sex', 'sab', 'dom'] }
-            const { data, labels } = response
-            setData(data)
-            setLabels(labels)
-        };
-
-        fetchData()
-        const interval = setInterval(fetchData, 10000)
-
-        return () => clearInterval(interval)
+        setTypeChart("weight")
     }, [])
 
     return (
         <Container style={styles.background}>
-            <Container style={styles.container}>
+            <ContainerChart style={styles.container_chart}>
 
-                <Text style={styles.title}>Dynamic Chart</Text>
+                <HeaderChart style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ ...styles.title, width: '35%' }}>Dados:</Text>
+
+                    <Picker
+                        style={{ ...styles.picker, width: '55%' }}
+                        selectedValue={selectedChartType}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setTypeChart(itemValue)
+                        }>
+                        <Picker.Item label="Peso" value="weight" style={styles.picker_item} />
+                        <Picker.Item label="Iluminação" value="lighting" style={styles.picker_item} />
+                        <Picker.Item label="Umidade" value="humidity" style={styles.picker_item} />
+                        <Picker.Item label="Temperatura" value="temperature" style={styles.picker_item} />
+                    </Picker>
+                </HeaderChart>
+
 
                 <LineChart
                     data={{
                         labels: labels,
                         datasets: [{ data: data }]
                     }}
-                    width={385}
-                    height={500}
+                    width={370}
+                    height={600}
                     yAxisLabel=""
                     chartConfig={{
                         backgroundGradientFrom: '#fff',
@@ -54,31 +85,34 @@ const DynamicChart = () => {
                     bezier
                     style={styles.chart}
                 />
-            </Container>
+            </ContainerChart>
         </Container>
     );
 };
 
 const styles = StyleSheet.create({
     background: {
-        padding: 1,
         backgroundColor: '#2D9831',
     },
-    container: {
-        flex: 1,
-        width: '110%',
-        backgroundColor: 'red',
+    container_chart: {
         borderRadius: 10,
-        justifyContent: 'flex-start',
     },
     title: {
-        fontSize: 22,
+        fontSize: 25,
         color: '#2D9831',
-        marginBottom: 20,
         fontWeight: 'bold',
+    },
+    picker: {
+        maxWidth: 180,
+    },
+    picker_item: {
+        color: '#2D9831',
+        fontWeight: 'bold',
+        fontSize: 17,
     },
     chart: {
         borderRadius: 10,
+        maxWidth: '200px',
     },
 });
 

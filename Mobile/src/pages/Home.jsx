@@ -1,7 +1,9 @@
-import { Text } from "react-native"
-import { StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Container, ContainerImage, Image } from '../Styles';
+import { useNavigation } from '@react-navigation/native';
+import { Container, ContainerImage, TextPlantName } from '../Styles';
+import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 
 
@@ -19,47 +21,61 @@ const Home = () => {
     //     console.log(dataPlant)
     // })
 
+    const navigation = useNavigation()
+    const handleChart = () => {
+        navigation.navigate('Chart')
+    }
+
     return (
         <Container style={styles.background}>
             <Container style={styles.container}>
 
-                <Text style={styles.title_plant}>{dataPlant?.name || 'Nome da Planta'}</Text>
+                <TouchableOpacity style={{ ...styles.statsButton, elevation: 5 }} onPress={handleChart}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <MaterialCommunityIcons name="chart-line-stacked" size={24} color="black" />
+                        <Text style={{ fontSize: 20, marginLeft: 10, color: '#2D9831' }}>Estatísticas</Text>
+                    </View>
+                </TouchableOpacity>
 
+
+                <TextPlantName style={styles.title_plant}>{dataPlant?.name || 'Nome da Planta'}</TextPlantName>
 
                 <ContainerImage>
                     <Image
                         source={require("../images/home_page/ligthning.png")}
-                        style={styles.ligthning.image}
+                        style={styles.ligthning}
                         resizeMode="contain"
                     />
-                    <Text style={{ ...styles.label_text_style, ...styles.ligthning.position_text }}>{dataPlant?.lighting || '100'}%</Text>
+                    <Text style={{ ...styles.label_text_style }}>{dataPlant?.lighting || '100'}%</Text>
                 </ContainerImage>
 
                 <ContainerImage>
                     <Image
                         source={require("../images/home_page/plant.png")}
-                        style={styles.plant.image}
+                        style={styles.plant}
                         resizeMode="contain"
                     />
-                    <Text style={{ ...styles.label_text_style, ...styles.plant.position_text }}>{dataPlant?.weight || '20.0'} Kg</Text>
+                    <Text style={{ ...styles.label_text_style }}>{dataPlant?.weight || '20.0'} Kg</Text>
                 </ContainerImage>
 
-                <ContainerImage>
-                    <Image
-                        source={require("../images/home_page/sensor.png")}
-                        style={styles.sensor.image}
-                        resizeMode="contain"
-                    />
-                    <Text style={{ ...styles.label_text_style, ...styles.sensor.position_text }}>{dataPlant?.humidity || '80'}% MC</Text>
-                </ContainerImage>
+                <ContainerImage style={{ flexDirection: 'row' }}>
+                    <ContainerImage>
+                        <Image
+                            source={require("../images/home_page/thermometer.png")}
+                            style={styles.thermometer}
+                            resizeMode="contain"
+                        />
+                        <Text style={{ ...styles.label_text_style }}>{dataPlant?.temperature || '18'} ºC</Text>
+                    </ContainerImage>
 
-                <ContainerImage>
-                    <Image
-                        source={require("../images/home_page/thermometer.png")}
-                        style={styles.thermometer.image}
-                        resizeMode="contain"
-                    />
-                    <Text style={{ ...styles.label_text_style, ...styles.thermometer.position_text }}>{dataPlant?.temperature || '18'} ºC</Text>
+                    <ContainerImage>
+                        <Image
+                            source={require("../images/home_page/sensor.png")}
+                            style={styles.sensor}
+                            resizeMode="contain"
+                        />
+                        <Text style={{ ...styles.label_text_style }}>{dataPlant?.humidity || '80'}% MC</Text>
+                    </ContainerImage>
                 </ContainerImage>
             </Container>
         </Container>
@@ -81,56 +97,30 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         backgroundColor: '#2D9831',
     },
-    title_plant: {
-        fontSize: 25,
-        color: '#fff',
-        fontWeight: 'bold',
-        right: 65,
-        bottom: 15
+    statsButton: {
+        margin: 25,
+        backgroundColor: '#ffffff', // cor de fundo do botão
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
     },
     label_text_style: {
-        fontSize: 20,
+        fontSize: 16,
         color: '#fff',
         fontWeight: 'bold',
     },
     ligthning: {
-        image: {
-            height: '45%',
-        },
-        position_text: {
-            bottom: 60,
-            left: 80,
-        },
+        marginTop: 30,
+        height: '35%',
     },
     plant: {
-        image: {
-            top: 70,
-            height: '150%',
-        },
-        position_text: {
-            top: 80,
-        },
+        height: '80%',
     },
     sensor: {
-        image: {
-            height: '35%',
-            top: 165,
-            left: 90,
-        },
-        position_text: {
-            top: 165,
-            left: 90,
-        },
+        height: '25%',
     },
     thermometer: {
-        image: {
-            height: '40%',
-            top: 5,
-            right: 90,
-        },
-        position_text: {
-            right: 90,
-        },
+        height: '25%',
     },
 })
 

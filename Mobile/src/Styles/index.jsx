@@ -3,17 +3,33 @@ import { RectButton } from 'react-native-gesture-handler';
 
 const Container = styled.View`
   flex: 1;
-  padding: 30px;
+  padding: 10px;
   align-items: center;
   background-color: #fff;
-  justify-content: center;
 `;
 
 const ContainerImage = styled.View`
   flex: 1;
   align-items: center;
-  justify-content: center;
   background-color: rgba(0,0,0,0);
+`;
+
+const ContainerChart = styled.View`
+  flex: 1;
+  margin-top: 3%;
+  max-height:  50%;
+  boder-radius: 10px;
+  align-items: center;
+  background-color: white;
+`;
+
+const HeaderChart = styled.View`
+  padding: 10px;
+  min-width: 350px;
+  max-height: 100px;
+  border-radius: 10px;
+  background-color: white;
+  justify-content: center;
 `;
 
 const Card = styled.View`
@@ -22,6 +38,20 @@ const Card = styled.View`
   border-radius: 30px;
   justify-content: center;
 `;
+
+const TextPlantName = styled.Text`
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+`;
+
+/**
+ *         fontSize: 25,
+        color: '#fff',
+        fontWeight: 'bold',
+        right: 65,
+        bottom: 15
+ */
 
 const ButtonCard = styled.View`
   display: flex;
@@ -112,7 +142,10 @@ const List = styled.FlatList`
 export {
   Container,
   ContainerImage,
+  ContainerChart,
+  HeaderChart,
   Card,
+  TextPlantName,
   ButtonCard,
   Button,
   ButtonText,

@@ -1,9 +1,6 @@
 import React from 'react';
 import Home from './src/pages/Home.jsx'
-import ViewPager from './src/pages/ViewPager.jsx'
-import BottomTabs from './src/pages/BottomTabs.jsx'
 import Chart from './src/pages/Chart.jsx'
-import { StyleSheet } from 'react-native';
 import SignIn from './src/pages/SignIn.jsx'
 import SignUp from './src/pages/SignUp.jsx'
 import { NavigationContainer } from '@react-navigation/native';
@@ -23,19 +20,12 @@ function App() {
       <Stack.Navigator>
         {/* <Button /> */}
         {newScreen('SignIn', SignIn, { headerShown: false })}
-        {newScreen('SignUp', SignUp, { title: '' })}
-        {newScreen('Home', Home, { title: 'Resumo Inicial' })}
-        {newScreen('ViewPager', ViewPager, { title: 'Resumo Inicial' })}
-        {newScreen('BottomTabs', BottomTabs, { title: 'Resumo Inicial' })}
-        {newScreen('Chart', Chart, { title: 'Gráfico' })}
+        {newScreen('SignUp', SignUp, { headerShown: false })}
+        {newScreen('Home', Home, { title: 'Resumo Inicial', headerTitleStyle: { fontWeight: 'bold', color: '#2D9831' } })}
+        {newScreen('Chart', Chart, { title: 'Estatísticas', headerTitleStyle: { fontWeight: 'bold', color: '#2D9831' } })}
       </Stack.Navigator>
     </NavigationContainer>
   )
 };
 
 export default App;
-
-
-const styles = StyleSheet.create({
-
-})

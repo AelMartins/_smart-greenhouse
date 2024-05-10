@@ -61,6 +61,10 @@ const SignUp = () => {
                 <TouchableOpacity onPress={() => handleSignIn()} style={styles.button}>
                     <Text style={styles.buttonText}>Inscrever-se</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => handleSignIn()} style={styles.button_back}>
+                    <Text style={styles.buttonText_back}>Voltar</Text>
+                </TouchableOpacity>
             </Container>
         </View>
     )
@@ -99,10 +103,24 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         borderRadius: 5,
     },
+    button_back: {
+        margin: 10,
+        borderWidth: 3,
+        borderColor: '#1a6eff',
+        backgroundColor: '#fff',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+    },
     buttonText: {
         fontSize: 20,
         fontWeight: 'bold',
         color: '#fff',
+    },
+    buttonText_back: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#1a6eff',
     },
 });
 

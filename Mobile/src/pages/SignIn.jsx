@@ -13,7 +13,7 @@ const SignIn = () => {
 
     const handleSignIn = () => {
         if (email === '' && password === '') {
-            navigation.navigate('Chart');
+            navigation.navigate('Home');
 
         } else {
             setError('E-mail e/ou senha incorretos!');
