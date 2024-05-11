@@ -30,10 +30,10 @@ const Home = () => {
         <Container style={styles.background}>
             <Container style={styles.container}>
 
-                <TouchableOpacity style={{ ...styles.statsButton, elevation: 5 }} onPress={handleChart}>
+                <TouchableOpacity style={{ ...styles.statsButton, elevation: 20 }} onPress={handleChart}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <MaterialCommunityIcons name="chart-line-stacked" size={24} color="black" />
-                        <Text style={{ fontSize: 20, marginLeft: 10, color: '#2D9831' }}>Estatísticas</Text>
+                        {/* <MaterialCommunityIcons name="chart-line-stacked" size={24} color="black" /> */}
+                        <Text style={{ fontSize: 20, color: '#2D9831' }}>Estatísticas</Text>
                     </View>
                 </TouchableOpacity>
 

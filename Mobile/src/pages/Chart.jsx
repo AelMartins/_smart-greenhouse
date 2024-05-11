@@ -1,8 +1,10 @@
+const api = require('../services/api')
 import React, { useState, useEffect } from 'react';
 import { LineChart } from 'react-native-chart-kit';
+import { Picker } from '@react-native-picker/picker';
 import { StyleSheet, Text, View } from 'react-native';
 import { Container, ContainerChart, HeaderChart } from '../Styles';
-import { Picker } from '@react-native-picker/picker';
+
 
 
 
@@ -12,24 +14,25 @@ const DynamicChart = () => {
     const [selectedChartType, setSelectedChartType] = useState('line');
 
 
-    const setTypeChart = (itemValue) => {
-        let data
-        if (itemValue === "weight") {
-            data = [100, 750, 450, 150, 325, 200, 250, 650, 840, 300, 523, 400]
+    const setTypeChart = async (itemValue) => {
+        let statistic_data = await api.get(`/data?type=${itemValue}`)
 
-        } else if (itemValue === "lighting") {
-            data = [437, 123, 150, 325, 650, 840, 300, 523, 400]
-
-        } else if (itemValue === "humidity") {
-            data = [86, 12, 150, 53, 20, 523, 400]
-
-        } else if (itemValue === "temperature") {
-            data = [76, 750, 250, 650, 840, 300, 523, 400]
-
-        }
-        setData(data)
-        setLabels(['seg', 'ter', 'qua', 'qui', 'sex', 'sab', 'dom'])
+        setData(statistic_data.data)
+        setLabels(statistic_data.label)
         setSelectedChartType(itemValue)
+    }
+
+
+    const pickerItemSelected = '#4fd155'
+    const newPickerItem = (itens = []) => {
+        const result = []
+        itens.forEach(item => {
+            const bg = item.value === selectedChartType ? pickerItemSelected : undefined
+
+            result.push(<Picker.Item label={item.label} value={item.value} style={styles.picker_item(bg)} />)
+        })
+
+        return result
     }
 
 
@@ -46,15 +49,18 @@ const DynamicChart = () => {
                     <Text style={{ ...styles.title, width: '35%' }}>Dados:</Text>
 
                     <Picker
-                        style={{ ...styles.picker, width: '55%' }}
+                        style={styles.picker}
                         selectedValue={selectedChartType}
                         onValueChange={(itemValue, itemIndex) =>
                             setTypeChart(itemValue)
-                        }>
-                        <Picker.Item label="Peso" value="weight" style={styles.picker_item} />
-                        <Picker.Item label="Iluminação" value="lighting" style={styles.picker_item} />
-                        <Picker.Item label="Umidade" value="humidity" style={styles.picker_item} />
-                        <Picker.Item label="Temperatura" value="temperature" style={styles.picker_item} />
+                        }
+                    >
+                        {newPickerItem([
+                            { label: 'Peso', value: 'weight' },
+                            { label: 'Iluminação', value: 'lighting' },
+                            { label: 'Umidade', value: 'humidity' },
+                            { label: 'Temperatura', value: 'temperature' },
+                        ])}
                     </Picker>
                 </HeaderChart>
 
@@ -66,23 +72,19 @@ const DynamicChart = () => {
                     }}
                     width={370}
                     height={600}
-                    yAxisLabel=""
                     chartConfig={{
                         backgroundGradientFrom: '#fff',
                         backgroundGradientTo: '#fff',
                         decimalPlaces: 2, // Casas decimais dos valores
-                        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                        labelColor: (opacity = 1) => `rgba(0, 255, 0, ${opacity})`,
-                        style: {
-                            borderRadius: 1,
-                        },
+                        color: (opacity = 1) => `rgba(0, 100, 0, ${opacity})`,
+                        labelColor: (opacity = 1) => `#2D9831`,
                         propsForDots: {
                             r: "5",
-                            strokeWidth: "2",
-                            stroke: "#78d600"
+                            strokeWidth: "1",
+                            stroke: "#2D9831"
                         }
                     }}
-                    bezier
+
                     style={styles.chart}
                 />
             </ContainerChart>
@@ -103,12 +105,21 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     picker: {
+        width: '55%',
+        height: '1%',
+        elevation: 8,
         maxWidth: 180,
+        maxHeight: 10,
+        borderRadius: 10,
+        backgroundColor: '#4fb055'
     },
-    picker_item: {
-        color: '#2D9831',
-        fontWeight: 'bold',
-        fontSize: 17,
+    picker_item: (bg) => {
+        return {
+            backgroundColor: bg ? bg : 'white', // 'rgba(45,152,49,0.7)',
+            color: bg ? 'white' : '#2D9831', // 'white',
+            fontWeight: 'bold',
+            fontSize: 15,
+        }
     },
     chart: {
         borderRadius: 10,
