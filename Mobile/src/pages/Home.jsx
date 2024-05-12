@@ -1,8 +1,9 @@
+const api = require('../utils/api')
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+const { screenWidth, screenHeight } = require('../utils/dimensions')
 import { Container, ContainerImage, TextPlantName } from '../Styles';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 
@@ -10,20 +11,30 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 const Home = () => {
     const [dataPlant, setDataPlant] = useState({})
 
-    // useEffect(async () => {
-    //     const data = {
-    //         lighting: Math.floor(Math.random() * 100),
-    //         weight: (Math.random() * 100).toFixed(1),
-    //         humidity: 10,
-    //         temperature: 40,
-    //     }
-    //     await setDataPlant(data)
-    //     console.log(dataPlant)
-    // })
+    let setOrderDataInApi = 1
+    const fetchData = async () => {
+        try {
+            const plantData = await api.get('home', { user_id: global.SessionUser.id, reverse: setOrderDataInApi % 2 == 0 })
+            setDataPlant(plantData)
+            setOrderDataInApi++
+
+        } catch (error) {
+            console.error('Error fetching data:', error)
+        }
+    }
+
+
+    // Gatilho inicial para consultas na Api
+    useEffect(() => {
+        fetchData()
+        const interval = setInterval(fetchData, 2000)
+
+        return () => clearInterval(interval)
+    }, [])
 
     const navigation = useNavigation()
     const handleChart = () => {
-        navigation.navigate('Chart')
+        navigation.navigate('Statistics')
     }
 
     return (
@@ -38,7 +49,7 @@ const Home = () => {
                 </TouchableOpacity>
 
 
-                <TextPlantName style={styles.title_plant}>{dataPlant?.name || 'Nome da Planta'}</TextPlantName>
+                <TextPlantName style={styles.title_plant}>{dataPlant?.name}</TextPlantName>
 
                 <ContainerImage>
                     <Image
@@ -46,7 +57,7 @@ const Home = () => {
                         style={styles.ligthning}
                         resizeMode="contain"
                     />
-                    <Text style={{ ...styles.label_text_style }}>{dataPlant?.lighting || '100'}%</Text>
+                    <Text style={{ ...styles.label_text_style }}>{dataPlant?.data?.illumination}%</Text>
                 </ContainerImage>
 
                 <ContainerImage>
@@ -55,7 +66,7 @@ const Home = () => {
                         style={styles.plant}
                         resizeMode="contain"
                     />
-                    <Text style={{ ...styles.label_text_style }}>{dataPlant?.weight || '20.0'} Kg</Text>
+                    <Text style={{ ...styles.label_text_style }}>{dataPlant?.data?.weight} Kg</Text>
                 </ContainerImage>
 
                 <ContainerImage style={{ flexDirection: 'row' }}>
@@ -65,7 +76,7 @@ const Home = () => {
                             style={styles.thermometer}
                             resizeMode="contain"
                         />
-                        <Text style={{ ...styles.label_text_style }}>{dataPlant?.temperature || '18'} ºC</Text>
+                        <Text style={{ ...styles.label_text_style }}>{dataPlant?.data?.celsius} ºC</Text>
                     </ContainerImage>
 
                     <ContainerImage>
@@ -74,7 +85,7 @@ const Home = () => {
                             style={styles.sensor}
                             resizeMode="contain"
                         />
-                        <Text style={{ ...styles.label_text_style }}>{dataPlant?.humidity || '80'}% MC</Text>
+                        <Text style={{ ...styles.label_text_style }}>{dataPlant?.data?.humidity}% MC</Text>
                     </ContainerImage>
                 </ContainerImage>
             </Container>
@@ -84,14 +95,14 @@ const Home = () => {
 
 const styles = StyleSheet.create({
     background: {
-        width: '100%',
-        height: '100%',
+        width: screenWidth,
+        height: screenHeight,
         backgroundColor: '#fff',
     },
     container: {
         flex: 1,
-        width: '100%',
-        height: '100%',
+        width: screenWidth * 0.95,
+        height: screenHeight,
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'flex-end',

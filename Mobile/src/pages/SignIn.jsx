@@ -1,24 +1,30 @@
 import { useState } from 'react';
+const api = require('../utils/api')
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, ImageBackground, Text } from 'react-native';
 import { Card, ButtonCard, Button, ButtonText, TextInput, LabelText } from '../Styles';
 
 
 const SignIn = () => {
-    const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
     const navigation = useNavigation();
 
-    const handleSignIn = () => {
-        if (email === '' && password === '') {
+    const handleSignIn = async () => {
+        await api.get('users', { name, password })
+            .then(res => {
+                global.SessionUser = res
+                setName('')
+                setPassword('')
             navigation.navigate('Home');
-
-        } else {
-            setError('E-mail e/ou senha incorretos!');
-            setTimeout(() => setError(''), 5000)
-        }
+            })
+            .catch(err => {
+                console.error(err)
+                setError(err.message);
+                setTimeout(() => setError(''), 5000)
+            })
     };
 
     const handleSignUp = () => {
@@ -34,9 +40,9 @@ const SignIn = () => {
             <Card style={styles.card}>
                 <LabelText style={styles.labelText}>E-mail</LabelText>
                 <TextInput
-                    value={email}
+                    value={name}
                     style={[styles.textInput, error && styles.errorInput]}
-                    onChangeText={setEmail}
+                    onChangeText={setName}
                     placeholder="Digite seu e-mail"
                 />
 

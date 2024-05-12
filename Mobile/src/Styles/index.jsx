@@ -5,7 +5,6 @@ const Container = styled.View`
   flex: 1;
   padding: 10px;
   align-items: center;
-  background-color: #fff;
 `;
 
 const ContainerImage = styled.View`
@@ -25,9 +24,6 @@ const ContainerChart = styled.View`
 
 const HeaderChart = styled.View`
   padding: 10px;
-  min-width: 350px;
-  max-height: 100px;
-  border-radius: 10px;
   background-color: white;
   justify-content: center;
 `;
