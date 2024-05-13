@@ -18,7 +18,7 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {newScreen('SignIn', SignIn, { headerShown: false })}
-        {newScreen('SignUp', SignUp, { headerShown: false })}
+        {newScreen('SignUp', SignUp, { title: 'Cadastro', headerTitleStyle: { fontWeight: 'bold', color: '#2D9831' } })}
         {newScreen('Home', Home, { title: 'Resumo Inicial', headerTitleStyle: { fontWeight: 'bold', color: '#2D9831' } })}
         {newScreen('Statistics', Statistics, { title: 'Estatísticas', headerTitleStyle: { fontWeight: 'bold', color: '#2D9831' } })}
       </Stack.Navigator>

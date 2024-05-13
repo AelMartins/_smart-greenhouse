@@ -2,7 +2,8 @@ import { useState } from 'react';
 const api = require('../utils/api')
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, ImageBackground, Text } from 'react-native';
-import { Card, ButtonCard, Button, ButtonText, TextInput, LabelText } from '../Styles';
+const { screenWidth, screenHeight } = require('../utils/dimensions')
+import { Container, ButtonCard, Button, ButtonText, TextInput, LabelText } from '../Styles';
 
 
 const SignIn = () => {
@@ -34,10 +35,10 @@ const SignIn = () => {
     return (
         <ImageBackground
             source={require('../images/background.jpg')} // Substitua pelo caminho da sua imagem
-            style={styles.background}
+            style={styles.container_background}
             blurRadius={3}
         >
-            <Card style={styles.card}>
+            <Container style={styles.container_background}>
                 <LabelText style={styles.labelText}>E-mail</LabelText>
                 <TextInput
                     value={name}
@@ -55,7 +56,7 @@ const SignIn = () => {
                     secureTextEntry={true}
                 />
 
-                {error && <Text style={styles.errorText}>{error}</Text>}
+                <Text style={styles.errorText}>{error}</Text>
 
                 <ButtonCard style={styles.buttonCard}>
                     <Button style={styles.button('signin')} onPress={() => handleSignIn()}>
@@ -67,47 +68,35 @@ const SignIn = () => {
                     </Button>
                 </ButtonCard>
 
-            </Card>
+            </Container>
         </ImageBackground>
     )
 }
 
 const styles = StyleSheet.create({
-    background: {
+    container_background: {
         flex: 1,
         justifyContent: 'center',
     },
-    card: {
-        flex: 1,
-    },
-    loginText: {
-        fontSize: 40,
-        color: '#78d600',
-        marginTop: 0,
-        marginBottom: 20,
-        fontWeight: 'bold',
-    },
-    textInput: {
-        borderColor: '#78d600',
-        borderWidth: 3,
-        backgroundColor: 'rgba(255,255,255,0.93)'
-    },
     labelText: {
         color: '#78d600',
+        textShadowRadius: 4,
         textShadowColor: 'black',
         textShadowOffset: { width: -2, height: 2 }, // Deslocamento da sombra
-        textShadowRadius: 4,
+    },
+    textInput: {
+        borderWidth: 3,
+        borderColor: '#78d600',
+        backgroundColor: 'rgba(255,255,255,0.9)',
     },
     buttonCard: {
         marginTop: 150,
-        alignItems: 'flex-end',
-        justifyContent: 'flex-end',
     },
     button: (type) => {
         return {
-            backgroundColor: type === 'signin' ? 'rgba(255,255,255,0.93)' : '#78d600',
-            borderColor: '#78d600',
             borderWidth: 3,
+            borderColor: '#78d600',
+            backgroundColor: type === 'signin' ? 'rgba(255,255,255,0.9)' : '#78d600',
         }
     },
     buttonText: (type) => {

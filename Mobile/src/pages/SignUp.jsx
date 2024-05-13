@@ -1,126 +1,141 @@
-import React from 'react';
-import { Container } from '../Styles';
+import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native'
-import { View, StyleSheet, TextInput, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, TextInput, Text, View } from 'react-native';
+const { screenWidth, screenHeight } = require('../utils/dimensions')
+import { Container, ButtonCard, Button, ButtonText } from '../Styles';
 
 
 const SignUp = () => {
-    const [name, setName] = React.useState('');
-    const [phone, setPhone] = React.useState('');
-    const [cpf, setCpf] = React.useState('');
-    const [email, setEmail] = React.useState('');
-    const [course, setCourse] = React.useState('');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmedPassword, setConfirmedPassword] = useState('');
+
+    const [error, setError] = useState('');
+
 
     const navigation = useNavigation()
-
     const handleSignIn = () => {
         navigation.navigate('SignIn')
     }
 
 
+    useEffect(() => {
+        const validPassword = () => {
+            if (password !== confirmedPassword) {
+                setError('As senhas não coincidem')
+            } else {
+                setError('')
+            }
+        }
+
+        const interval = setInterval(validPassword, 0)
+
+        return () => clearInterval(interval)
+
+        console.log('teste senha')
+    }, [confirmedPassword])
+
+
     return (
-        <View style={styles.view}>
-            <Container style={styles.container}>
-                <Text style={styles.registerText}>Cadastro</Text>
+        <Container style={styles.container}>
+            <Text style={styles.registerText}>
+                Acompanhe o crescimento do seu jardim!
+                <Text style={{ fontSize: 18, color: '#78d600', }}>Cadastre-se</Text> e monitore o crescimento das suas plantinhas.
+            </Text>
 
-                <TextInput
-                    style={styles.input}
-                    value={name}
-                    onChangeText={setName}
-                    placeholder="Nome"
-                />
+            <TextInput
+                style={styles.input}
+                value={name}
+                onChangeText={setName}
+                placeholder="Nome"
+            />
 
-                <TextInput
-                    style={styles.input}
-                    value={phone}
-                    onChangeText={setPhone}
-                    placeholder="Telefone"
-                />
+            <TextInput
+                style={styles.input}
+                value={email}
+                onChangeText={setEmail}
+                placeholder="E-mail"
+            />
 
-                <TextInput
-                    style={styles.input}
-                    value={cpf}
-                    onChangeText={setCpf}
-                    placeholder="CPF"
-                />
+            <TextInput
+                style={styles.input}
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Senha"
+                secureTextEntry={true}
+            />
 
-                <TextInput
-                    style={styles.input}
-                    value={email}
-                    onChangeText={setEmail}
-                    placeholder="E-mail"
-                />
+            <TextInput
+                style={styles.input}
+                value={confirmedPassword}
+                onChangeText={setConfirmedPassword}
+                placeholder="Confirme sua Senha"
+                secureTextEntry={true}
+            />
 
-                <TextInput
-                    style={styles.input}
-                    value={course}
-                    onChangeText={setCourse}
-                    placeholder="Curso"
-                />
+            <Text style={styles.errorText}>{error}</Text>
 
-                <TouchableOpacity onPress={() => handleSignIn()} style={styles.button}>
-                    <Text style={styles.buttonText}>Inscrever-se</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => handleSignIn()} style={styles.button_back}>
-                    <Text style={styles.buttonText_back}>Voltar</Text>
-                </TouchableOpacity>
-            </Container>
-        </View>
+            <ButtonCard style={styles.buttonCard}>
+                <Button style={styles.button()} onPress={() => handleSignIn()}>
+                    <ButtonText style={styles.buttonText()}>Cadastre-se</ButtonText>
+                </Button>
+            </ButtonCard>
+        </Container>
     )
 }
 
 const styles = StyleSheet.create({
-    view: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
     container: {
-        justifyContent: 'center',
+        width: screenWidth,
+        height: screenHeight,
         alignItems: 'center',
         backgroundColor: '#fff',
-        marginBottom: 200
+        justifyContent: 'center',
     },
     registerText: {
-        fontSize: 40,
-        color: '#1a6eff',
-        marginTop: 0,
-        marginBottom: 20,
-        fontWeight: 'bold',
+        width: screenWidth * 0.8,
+        fontSize: 16,
+        color: '#000',
+        marginBottom: 80,
+    },
+    labelText: {
+        color: '#78d600',
+        textShadowRadius: 4,
+        textShadowColor: 'black',
+        textShadowOffset: { width: -2, height: 2 }, // Deslocamento da sombra
     },
     input: {
-        width: '80%',
-        height: 40,
-        borderColor: '#070099',
+        margin: 10,
+        fontSize: 17,
         borderWidth: 1,
         borderRadius: 5,
-        marginBottom: 10,
         paddingHorizontal: 10,
+        borderColor: '#78d600',
+        width: screenWidth * 0.8,
+        height: screenHeight * 0.05,
     },
-    button: {
-        backgroundColor: '#1a6eff',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 5,
+    buttonCard: {
+        marginTop: 80,
     },
-    button_back: {
-        margin: 10,
-        borderWidth: 3,
-        borderColor: '#1a6eff',
-        backgroundColor: '#fff',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 5,
+    button: (type) => {
+        return {
+            borderWidth: 3,
+            borderColor: '#78d600',
+            backgroundColor: type === 'signin' ? 'rgba(255,255,255,0.9)' : '#78d600',
+        }
     },
-    buttonText: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#fff',
+    buttonText: (type) => {
+        return {
+            color: type === 'signin' ? '#78d600' : '#fff'
+        }
     },
-    buttonText_back: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#1a6eff',
+    errorInput: {
+        borderColor: 'red',
+    },
+    errorText: {
+        color: 'red',
+        marginBottom: 10,
     },
 });
 

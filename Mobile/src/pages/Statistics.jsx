@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         width: screenWidth * 0.95,
-        height: screenHeight * 0.06,
+        height: screenHeight * 0.1,
         justifyContent: 'space-between',
         backgroundColor: 'rgba(0,0,0,0)',
     },
