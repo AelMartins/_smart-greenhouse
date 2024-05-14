@@ -21,7 +21,7 @@ const Statistics = () => {
         const fetchData = async () => {
             try {
                 // const statisticData = await api.get(`/data?type=${selectedChartData}`)
-                const statisticData = await api.get('statistic', { user_id: global.SessionUser.id, type: selectedChartData })
+                const statisticData = await api.get('/data', { user_id: global.SessionUser.id, type: selectedChartData })
                 setDataChart({
                     labels: statisticData.labels,
                     datasets: [{ data: statisticData.data }]
@@ -80,7 +80,7 @@ const Statistics = () => {
 
                 <LineChart
                     width={screenWidth * 0.95}
-                    height={screenHeight * 0.815}
+                    height={screenHeight * 0.78}
                     data={dataChart}
                     chartConfig={{
                         propsForDots: {
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         width: screenWidth * 0.95,
-        height: screenHeight * 0.1,
+        height: screenHeight * 0.08,
         justifyContent: 'space-between',
         backgroundColor: 'rgba(0,0,0,0)',
     },

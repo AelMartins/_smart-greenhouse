@@ -7,17 +7,17 @@ import { Container, ButtonCard, Button, ButtonText, TextInput, LabelText } from 
 
 
 const SignIn = () => {
-    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
     const navigation = useNavigation();
 
     const handleSignIn = async () => {
-        await api.get('users', { name, password })
+        await api.post('/login', { email, password })
             .then(res => {
                 global.SessionUser = res
-                setName('')
+                setEmail('')
                 setPassword('')
             navigation.navigate('Home');
             })
@@ -41,9 +41,9 @@ const SignIn = () => {
             <Container style={styles.container_background}>
                 <LabelText style={styles.labelText}>E-mail</LabelText>
                 <TextInput
-                    value={name}
+                    value={email}
                     style={[styles.textInput, error && styles.errorInput]}
-                    onChangeText={setName}
+                    onChangeText={setEmail}
                     placeholder="Digite seu e-mail"
                 />
 

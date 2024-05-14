@@ -11,8 +11,9 @@ const simulationData = {
     users: [
         {
             id: '1',
-            name: 'teste',
-            password: '123'
+            name: 'Usuário Padrão',
+            email: '',
+            password: ''
         }
     ],
     plants: [
@@ -92,6 +93,78 @@ const simulationData = {
             weight: 0.342,
             date: new Date().getDate(),
             time: new Date().getTime(),
+        },
+
+        // Planta 2 para teste de usuário cadastrado
+        {
+            id: '8',
+            plants_id: '2',
+            illumination: 100,
+            celsius: 18,
+            humidity: 80,
+            weight: 0.254,
+            date: new Date().getDate(),
+            time: new Date().getTime(),
+        },
+        {
+            id: '9',
+            plants_id: '2',
+            illumination: 45,
+            celsius: 22,
+            humidity: 85,
+            weight: 0.255,
+            date: new Date().getDate(),
+            time: new Date().getTime(),
+        },
+        {
+            id: '10',
+            plants_id: '2',
+            illumination: 100,
+            celsius: 32,
+            humidity: 48,
+            weight: 0.245,
+            date: new Date().getDate(),
+            time: new Date().getTime(),
+        },
+        {
+            id: '11',
+            plants_id: '2',
+            illumination: 5,
+            celsius: 9,
+            humidity: 68,
+            weight: 0.220,
+            date: new Date().getDate(),
+            time: new Date().getTime(),
+        },
+        {
+            id: '12',
+            plants_id: '2',
+            illumination: 64,
+            celsius: 20,
+            humidity: 63,
+            weight: 0.124,
+            date: new Date().getDate(),
+            time: new Date().getTime(),
+        },
+        {
+            id: '13',
+            plants_id: '2',
+            illumination: 89,
+            celsius: 24,
+            humidity: 77,
+            weight: 0.654,
+            date: new Date().getDate(),
+            time: new Date().getTime(),
+        },
+        {
+            id: '14',
+            plants_id: '2',
+            illumination: 12,
+            celsius: 25,
+            humidity: 25,
+            weight: 0.342,
+            date: new Date().getDate(),
+            time: new Date().getTime(),
         }
     ],
     labels: ['seg', 'ter', 'qua', 'qui', 'sex', 'sab', 'dom']
@@ -102,25 +175,8 @@ const get = async (path = '', payload = {}) => {
     // return await axios({ ...config, method: 'get', path })
 
 
-    if (path == 'users') {
-        const findUser = simulationData.users.find(user => user.name === payload.name && user.password === payload.password)
-        if (findUser) {
-            const Plants = simulationData.plants.filter(plant => {
-                if (plant.users_id === findUser.id) {
-                    return {
-                        ...plant,
-                        data: simulationData.data.filter(d => d.plants_id === plant.id)
-                    }
-                }
-            })
-
-            return { ...findUser, Plants }
-        } else {
-            throw new Error('Usuário e/ou Senha inválidos!')
-        }
-
-    } else if (path == 'home') {
-        const plant = simulationData.plants.find(plant => plant.users_id === payload.user_id)
+    if (path === '/plants') {
+        const plant = simulationData.plants.find(plant => plant.users_id === payload.user_id) || simulationData.plants[0]
         let data = payload.reverse ? simulationData.data[0] : simulationData.data[6]
 
         return {
@@ -128,7 +184,7 @@ const get = async (path = '', payload = {}) => {
             data
         }
 
-    } else if (path == 'statistic') {
+    } else if (path == '/data') {
         const plant = simulationData.plants.find(plant => plant.users_id === payload.user_id)
         let data = []
 
@@ -143,10 +199,37 @@ const get = async (path = '', payload = {}) => {
     }
 }
 
-const post = async (path, data) => {
-    console.log(`Config Request GET: ${{ ...config, method: 'post', path, data }}`)
+const post = async (path, payload) => {
+// console.log(`Config Request GET: `, { ...config, method: 'post', path, payload })
     // return await axios({ ...config, method: 'post', path, data })
+
+
+    if (path === '/login') {
+        const findUser = simulationData.users.find(user => user.email === payload.email && user.password === payload.password)
+        if (!findUser) throw new Error('E-mail e/ou Senha inválidos!')
+
+        const Plants = simulationData.plants.filter(plant => {
+            if (plant.users_id === findUser.id) {
+                return {
+                    ...plant,
+                    data: simulationData.data.filter(d => d.plants_id === plant.id)
+                }
+            }
+        })
+        return { ...findUser, Plants }
+
+    } else if (path === '/users') {
+        const verify = simulationData.users.find(user => user.email === payload.email)
+        if (verify) throw Object.assign(new Error('E-mail já cadastrado!'), { email: false })
+
+        simulationData.users.push({
+            id: '2',
+            ...payload
+        })
+        return { success: true, message: 'Usuário cadastrado com sucesso!' }
+    }
 }
+
 const put = async (config) => {
     return await axios.get(config)
 }

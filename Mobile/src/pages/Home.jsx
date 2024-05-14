@@ -14,7 +14,7 @@ const Home = () => {
     let setOrderDataInApi = 1
     const fetchData = async () => {
         try {
-            const plantData = await api.get('home', { user_id: global.SessionUser.id, reverse: setOrderDataInApi % 2 == 0 })
+            const plantData = await api.get('/plants', { user_id: global.SessionUser.id, reverse: setOrderDataInApi % 2 == 0 })
             setDataPlant(plantData)
             setOrderDataInApi++
 
@@ -101,19 +101,19 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        width: screenWidth * 0.95,
-        height: screenHeight,
+        elevation: 5,
         borderRadius: 20,
         alignItems: 'center',
+        width: screenWidth * 0.95,
         justifyContent: 'flex-end',
         backgroundColor: '#2D9831',
     },
     statsButton: {
         margin: 25,
-        backgroundColor: '#ffffff', // cor de fundo do botão
+        borderRadius: 10,
         paddingVertical: 10,
         paddingHorizontal: 20,
-        borderRadius: 10,
+        backgroundColor: '#ffffff',
     },
     label_text_style: {
         fontSize: 16,

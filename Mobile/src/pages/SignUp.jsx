@@ -1,7 +1,8 @@
+const api = require('../utils/api')
 import { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, TextInput, Text, View } from 'react-native';
-const { screenWidth, screenHeight } = require('../utils/dimensions')
+const { screenWidth, screenHeight } = require('../utils/dimensions');
 import { Container, ButtonCard, Button, ButtonText } from '../Styles';
 
 
@@ -10,30 +11,78 @@ const SignUp = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmedPassword, setConfirmedPassword] = useState('');
-
-    const [error, setError] = useState('');
-
-
+    const [messageUser, setMessageUser] = useState({});
     const navigation = useNavigation()
-    const handleSignIn = () => {
-        navigation.navigate('SignIn')
+
+
+    // Seta mensagem de exibição ao usuário
+    const setMessageWithTimeout = (object, timeout = 5000) => {
+        setMessageUser(object)
+        setTimeout(() => { setMessageUser({}) }, timeout)
     }
 
 
-    useEffect(() => {
-        const validPassword = () => {
-            if (password !== confirmedPassword) {
-                setError('As senhas não coincidem')
-            } else {
-                setError('')
-            }
+    // Realiza o Cadastro do usuário e redireciona a tela de Login
+    const handleSignUp = async () => {
+        // Validação de campos preenchidos
+        if (name === '' || email === '' || password === '') {
+            setMessageWithTimeout({
+                message: 'Preencha os campos corretamente',
+                error: true,
+                name: !name,
+                email: !email,
+                password: !password
+            })
+            return
         }
 
-        const interval = setInterval(validPassword, 0)
+        // Tratativa de confirmação de senha
+        if (password !== confirmedPassword) {
+            setMessageWithTimeout({
+                message: 'As senhas não coincidem',
+                error: true,
+                password: false,
+                confirmedPassword: false
+            })
+            return
+        }
 
-        return () => clearInterval(interval)
 
-        console.log('teste senha')
+        await api.post('/users', { name, email, password })
+            .then(res => {
+                setMessageWithTimeout({ message: res.message, error: false }) // Exibe mensage de sucesso
+
+                setTimeout(() => {
+                    navigation.navigate('SignIn') // Redirecionamento tela de Login
+                }, 1500)
+            })
+            .catch(err => {
+                console.error('Erro no cadastro de usuário', err)
+                setMessageWithTimeout({ message: err.message, error: true, email: !err.email })
+            })
+    }
+
+
+    // Validação de Senha (confirma senha digitada pelo usuário)
+    const validatePassword = () => {
+        if (password !== confirmedPassword) {
+            setMessageWithTimeout({
+                message: 'As senhas não coincidem',
+                error: true,
+                password: false,
+                confirmedPassword: false
+            })
+        } else {
+            setMessageWithTimeout({})
+        }
+    }
+
+    useEffect(() => {
+        if (confirmedPassword !== '') {
+            const timer = setTimeout(validatePassword, 500)
+            return () => clearTimeout(timer)
+        }
+
     }, [confirmedPassword])
 
 
@@ -45,21 +94,21 @@ const SignUp = () => {
             </Text>
 
             <TextInput
-                style={styles.input}
+                style={[styles.input, messageUser.name && styles.messageUserInput(messageUser.error)]}
                 value={name}
                 onChangeText={setName}
                 placeholder="Nome"
             />
 
             <TextInput
-                style={styles.input}
+                style={[styles.input, messageUser.email && styles.messageUserInput(messageUser.error)]}
                 value={email}
                 onChangeText={setEmail}
                 placeholder="E-mail"
             />
 
             <TextInput
-                style={styles.input}
+                style={[styles.input, messageUser.password && styles.messageUserInput(messageUser.error)]}
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Senha"
@@ -67,18 +116,18 @@ const SignUp = () => {
             />
 
             <TextInput
-                style={styles.input}
+                style={[styles.input, messageUser.confirmedPassword && styles.messageUserInput(messageUser.error)]}
                 value={confirmedPassword}
                 onChangeText={setConfirmedPassword}
                 placeholder="Confirme sua Senha"
                 secureTextEntry={true}
             />
 
-            <Text style={styles.errorText}>{error}</Text>
+            <Text style={styles.messageUserText(messageUser.error)}>{messageUser.message ? messageUser.message : ''}</Text>
 
             <ButtonCard style={styles.buttonCard}>
-                <Button style={styles.button()} onPress={() => handleSignIn()}>
-                    <ButtonText style={styles.buttonText()}>Cadastre-se</ButtonText>
+                <Button style={styles.button} onPress={() => handleSignUp()}>
+                    <ButtonText style={styles.buttonText}>Cadastre-se</ButtonText>
                 </Button>
             </ButtonCard>
         </Container>
@@ -94,16 +143,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     registerText: {
-        width: screenWidth * 0.8,
         fontSize: 16,
         color: '#000',
         marginBottom: 80,
-    },
-    labelText: {
-        color: '#78d600',
-        textShadowRadius: 4,
-        textShadowColor: 'black',
-        textShadowOffset: { width: -2, height: 2 }, // Deslocamento da sombra
+        width: screenWidth * 0.8,
     },
     input: {
         margin: 10,
@@ -114,28 +157,28 @@ const styles = StyleSheet.create({
         borderColor: '#78d600',
         width: screenWidth * 0.8,
         height: screenHeight * 0.05,
+        backgroundColor: 'rgba(45,159,49,0.1)',
     },
     buttonCard: {
         marginTop: 80,
     },
-    button: (type) => {
+    button: {
+        borderWidth: 3,
+        borderColor: '#78d600',
+        backgroundColor: '#78d600',
+    },
+    buttonText: {
+        color: '#fff'
+    },
+    messageUserInput: (type) => {
+        return type ? { borderColor: 'red', } : {}
+    },
+    messageUserText: (type) => {
         return {
-            borderWidth: 3,
-            borderColor: '#78d600',
-            backgroundColor: type === 'signin' ? 'rgba(255,255,255,0.9)' : '#78d600',
+            marginBottom: 10,
+            color: type ? 'red' : '#78d600',
         }
-    },
-    buttonText: (type) => {
-        return {
-            color: type === 'signin' ? '#78d600' : '#fff'
-        }
-    },
-    errorInput: {
-        borderColor: 'red',
-    },
-    errorText: {
-        color: 'red',
-        marginBottom: 10,
+
     },
 });
 
