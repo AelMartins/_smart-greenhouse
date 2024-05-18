@@ -1,17 +1,18 @@
 const api = require('../utils/api')
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, TextInput, Text, View } from 'react-native';
 const { screenWidth, screenHeight } = require('../utils/dimensions');
 import { Container, ButtonCard, Button, ButtonText } from '../Styles';
+import { StyleSheet, Appearance, TextInput, Text } from 'react-native';
 
+const colorTextInput = Appearance.getColorScheme() === 'dark' ? '#000' : '#000'
 
 const SignUp = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmedPassword, setConfirmedPassword] = useState('');
     const [messageUser, setMessageUser] = useState({});
+    const [confirmedPassword, setConfirmedPassword] = useState('');
     const navigation = useNavigation()
 
 
@@ -77,6 +78,8 @@ const SignUp = () => {
         }
     }
 
+
+    // Verificação de senha e confirmação
     useEffect(() => {
         if (confirmedPassword !== '') {
             const timer = setTimeout(validatePassword, 500)
@@ -98,6 +101,7 @@ const SignUp = () => {
                 value={name}
                 onChangeText={setName}
                 placeholder="Nome"
+                placeholderTextColor={colorTextInput}
             />
 
             <TextInput
@@ -105,6 +109,7 @@ const SignUp = () => {
                 value={email}
                 onChangeText={setEmail}
                 placeholder="E-mail"
+                placeholderTextColor={colorTextInput}
             />
 
             <TextInput
@@ -113,6 +118,7 @@ const SignUp = () => {
                 onChangeText={setPassword}
                 placeholder="Senha"
                 secureTextEntry={true}
+                placeholderTextColor={colorTextInput}
             />
 
             <TextInput
@@ -121,6 +127,7 @@ const SignUp = () => {
                 onChangeText={setConfirmedPassword}
                 placeholder="Confirme sua Senha"
                 secureTextEntry={true}
+                placeholderTextColor={colorTextInput}
             />
 
             <Text style={styles.messageUserText(messageUser.error)}>{messageUser.message ? messageUser.message : ''}</Text>
@@ -155,6 +162,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         borderColor: '#78d600',
+        color: colorTextInput,
         width: screenWidth * 0.8,
         height: screenHeight * 0.05,
         backgroundColor: 'rgba(45,159,49,0.1)',
