@@ -17,8 +17,8 @@ const findLastData = async (plant_id) => {
     return await repository.findLastData(options)
 }
 
-const create = async () => {
-
+const create = async (payload) => {
+    return await repository.create(payload)
 }
 
 module.exports = {
