@@ -18,10 +18,23 @@ model users {
 }
 
 model plants {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  user       users?   @relation(fields: [user_id], references: [id])
-  user_id    String?  @db.ObjectId
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  user        users?        @relation(fields: [user_id], references: [id])
+  user_id     String?       @db.ObjectId
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  data_plants data_plants[]
+}
+
+model data_plants {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  plant        plants?  @relation(fields: [plant_id], references: [id])
+  plant_id     String?  @db.ObjectId
+  illumination Int
+  celsius      Int
+  humidity     Int
+  weight       Float
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
 }
