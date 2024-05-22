@@ -5,6 +5,7 @@ const { screenWidth, screenHeight } = require('../utils/dimensions')
 import { Container, Card, LabelText, TextInput } from '../Styles';
 import { StyleSheet, View, Text, TouchableOpacity, Appearance, Modal } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const colorTextInput = Appearance.getColorScheme() === 'dark' ? '#000' : '#000'
@@ -17,24 +18,37 @@ const Home = () => {
     const [modalVisible, setModalVisible] = useState({ active: false, type: '' })
 
 
-    const [plants, setPlants] = useState([
-        { id: 1, title: 'Planta 1' },
-        { id: 2, title: 'Planta 2' },
-        { id: 3, title: 'Planta 3' },
-        { id: 4, title: 'Planta 4' },
-        { id: 5, title: 'Planta 5' },
-        { id: 6, title: 'Planta 6' },
-        { id: 7, title: 'Planta 7' },
-        { id: 8, title: 'Planta 8' },
-        { id: 9, title: 'Planta 9' },
-        { id: 10, title: 'Planta 10' },
-        { id: 11, title: 'Planta 11' },
-        { id: 12, title: 'Planta 12' },
-        { id: 13, title: 'Planta 13' },
-        { id: 14, title: 'Planta 14' },
-        { id: 15, title: 'Planta 15' },
-        { id: 16, title: 'Planta 16' },
-    ]);
+
+    /**
+     * Gatilho inicial para consultas na Api
+     */
+    const [user, setUser] = useState({})
+    const [plants, setPlants] = useState([])
+
+    const fetchData = async () => {
+        try {
+            console.log('User ID: ', await AsyncStorage.getItem('user_id'))
+            await api.get(`/users/${await AsyncStorage.getItem('user_id')}`)
+                .then(async res => {
+                    await setPlants(res.data.plants)
+                    console.log(plants)
+
+                    delete res.data.plants
+                    setUser(res.data)
+                    console.log('Dados do usuário', res.data)
+                })
+
+        } catch (error) {
+            console.error(JSON.stringify(error.response.data))
+        }
+    }
+    useEffect(() => {
+        fetchData()
+        const interval = setInterval(fetchData, 20000)
+
+        return () => clearInterval(interval)
+    }, [])
+
 
 
 
@@ -71,7 +85,7 @@ const Home = () => {
     const renderItem = ({ item }) => (
         <Card style={styles.frontCardPlant}>
             <TouchableOpacity onPress={handlerDataPlant}>
-                <Text style={{ ...styles.textStyle, fontSize: 18, color: '#78d600' }}>{item.title}</Text>
+                <Text style={{ ...styles.textStyle, fontSize: 18, color: '#78d600' }}>{item.name}</Text>
             </TouchableOpacity>
         </Card>
     )

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 const api = require('../utils/api')
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, ImageBackground, Text } from 'react-native';
-const { screenWidth, screenHeight } = require('../utils/dimensions')
+import { StyleSheet, ImageBackground, Text, } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Container, ButtonCard, Button, ButtonText, TextInput, LabelText } from '../Styles';
 
 
@@ -14,16 +14,22 @@ const SignIn = () => {
     const navigation = useNavigation();
 
     const handleSignIn = async () => {
-        await api.post('/login', { email, password })
-            .then(res => {
-                global.SessionUser = res
+        // if (!email || !password) {
+        //     setError('Preencha os campos corretamente');
+        //     setTimeout(() => setError(''), 5000)
+        //     return
+        // }
+
+        // await api.post(`/users/login`, { email, password })
+        await api.post(`/users/login`, { email: 'joao@teste.com', password: 'jp123' })
+            .then(async res => {
+                await AsyncStorage.setItem('user_id', res.data.id)
+                navigation.navigate('Home')
                 setEmail('')
                 setPassword('')
-            navigation.navigate('Home');
             })
             .catch(err => {
-                console.error(err)
-                setError(err.message);
+                setError(err.response.data.message)
                 setTimeout(() => setError(''), 5000)
             })
     };

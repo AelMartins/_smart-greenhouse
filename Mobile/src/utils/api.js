@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const config = {
-    baseURL: 'http:localhost:5000',
+    baseURL: 'https://gf9ys3-4000.csb.app',
     headers: {
         'Content-Type': 'application/json'
     }
@@ -9,13 +9,11 @@ const config = {
 
 
 const get = async (path = '', payload = {}) => {
-    console.log(`Config Request GET: `, { ...config, method: 'get', path, payload })
-    return await axios({ ...config, method: 'get', path })
+    return await axios.get(`${config.baseURL}${path}`, { headers: config.headers })
 }
 
-const post = async (path, payload) => {
-    console.log(`Config Request GET: `, { ...config, method: 'post', path, payload })
-    return await axios({ ...config, method: 'post', path, data })
+const post = async (path, data) => {
+    return await axios.post(`${config.baseURL}${path}`, data, { headers: config.headers })
 }
 
 const put = async (config) => {
