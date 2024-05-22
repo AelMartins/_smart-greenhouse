@@ -41,14 +41,6 @@ const TextPlantName = styled.Text`
   font-weight: bold;
 `;
 
-/**
- *         fontSize: 25,
-        color: '#fff',
-        fontWeight: 'bold',
-        right: 65,
-        bottom: 15
- */
-
 const ButtonCard = styled.View`
   display: flex;
   justify-content: space-between;
@@ -102,35 +94,6 @@ const IconButton = ({ onPress, iconName, text }) => {
 
 const Image = styled.Image``;
 
-
-
-
-
-
-
-
-
-
-
-
-const Form = styled.View`
-  flex-direction: row;
-  padding-bottom: 20px;
-  border-bottom-width: 1px;
-  border-color: #eee;
-`;
-
-
-
-const SubmitButton = styled(RectButton)`
-  justify-content: center;
-  align-items: center;
-  background: #3498db;
-  margin-left: 10px;
-  padding: 0 12px;
-  opacity: ${props => (props.loading ? 0.7 : 1)};
-`;
-
 const List = styled.FlatList`
   margin-top: 20px;
 `;
@@ -149,4 +112,5 @@ export {
   LabelText,
   IconButton,
   Image,
+  List,
 }

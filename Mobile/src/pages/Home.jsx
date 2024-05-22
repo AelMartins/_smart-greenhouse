@@ -2,93 +2,201 @@ const api = require('../utils/api')
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 const { screenWidth, screenHeight } = require('../utils/dimensions')
-import { Container, ContainerImage, TextPlantName } from '../Styles';
-import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import { Container, Card, LabelText, TextInput } from '../Styles';
+import { StyleSheet, View, Text, TouchableOpacity, Appearance, Modal } from 'react-native';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 
-
+const colorTextInput = Appearance.getColorScheme() === 'dark' ? '#000' : '#000'
 
 const Home = () => {
-    const [dataPlant, setDataPlant] = useState({})
-
-    let setOrderDataInApi = 1
-    const fetchData = async () => {
-        try {
-            const plantData = await api.get('/plants', { user_id: global.SessionUser.id, reverse: setOrderDataInApi % 2 == 0 })
-            setDataPlant(plantData)
-            setOrderDataInApi++
-
-        } catch (error) {
-            console.error('Error fetching data:', error)
-        }
-    }
-
-
-    // Gatilho inicial para consultas na Api
-    useEffect(() => {
-        fetchData()
-        const interval = setInterval(fetchData, 2000)
-
-        return () => clearInterval(interval)
-    }, [])
-
     const navigation = useNavigation()
-    const handleChart = () => {
-        navigation.navigate('Statistics')
+    const [error, setError] = useState('')
+    const [newPlantName, setNewPlantName] = useState('')
+    const [selectedProductId, setSelectedPlantId] = useState(null)
+    const [modalVisible, setModalVisible] = useState({ active: false, type: '' })
+
+
+    const [plants, setPlants] = useState([
+        { id: 1, title: 'Planta 1' },
+        { id: 2, title: 'Planta 2' },
+        { id: 3, title: 'Planta 3' },
+        { id: 4, title: 'Planta 4' },
+        { id: 5, title: 'Planta 5' },
+        { id: 6, title: 'Planta 6' },
+        { id: 7, title: 'Planta 7' },
+        { id: 8, title: 'Planta 8' },
+        { id: 9, title: 'Planta 9' },
+        { id: 10, title: 'Planta 10' },
+        { id: 11, title: 'Planta 11' },
+        { id: 12, title: 'Planta 12' },
+        { id: 13, title: 'Planta 13' },
+        { id: 14, title: 'Planta 14' },
+        { id: 15, title: 'Planta 15' },
+        { id: 16, title: 'Planta 16' },
+    ]);
+
+
+
+
+    /**
+     * Adiciona uma nova planta do usuário
+     */
+    const addNewPlant = () => {
+        setModalVisible({ active: true, type: 'newPlant' })
     }
+
+
+    /**
+     * Realizar a exclusão da planta selecionada
+     */
+    const confirmDeletePlant = async (id) => {
+        // Define planta selecionada para exclusão
+        setSelectedPlantId(id)
+        setModalVisible({ active: true, type: 'confirmDelete' })
+    }
+    const deletePlant = async () => {
+        await setPlants(plants.filter(plant => plant.id !== selectedProductId)) // Deleta planta selecionada
+
+        // Fecha Modal e nenhuma planta selecionada
+        setModalVisible({ active: false, type: '' })
+        setSelectedPlantId(null)
+    };
+
+
+    /**
+     * Renderização dos componentes de cada Planta
+     */
+    const handlerDataPlant = () => navigation.navigate('DataPlant')
+    const renderItem = ({ item }) => (
+        <Card style={styles.frontCardPlant}>
+            <TouchableOpacity onPress={handlerDataPlant}>
+                <Text style={{ ...styles.textStyle, fontSize: 18, color: '#78d600' }}>{item.title}</Text>
+            </TouchableOpacity>
+        </Card>
+    )
+    const renderHiddenItem = (data) => (
+        <Card style={styles.backCardPlant}>
+            <TouchableOpacity style={styles.deleteBtnCard} onPress={() => confirmDeletePlant(data.item.id)}>
+                <Text style={styles.textStyle}>Deletar</Text>
+            </TouchableOpacity>
+        </Card>
+    );
+
 
     return (
         <Container style={styles.background}>
             <Container style={styles.container}>
 
-                <TouchableOpacity style={{ ...styles.statsButton, elevation: 20 }} onPress={handleChart}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        {/* <MaterialCommunityIcons name="chart-line-stacked" size={24} color="black" /> */}
-                        <Text style={{ fontSize: 20, color: '#2D9831' }}>Estatísticas</Text>
-                    </View>
-                </TouchableOpacity>
+                <Container style={styles.navibar}>
+                    <TouchableOpacity style={styles.buttonNavibar} onPress={addNewPlant}>
+                        <Text style={{ ...styles.textStyle, fontSize: 16 }}>Adicionar</Text>
+                    </TouchableOpacity>
+                </Container>
 
 
-                <TextPlantName style={styles.title_plant}>{dataPlant?.name}</TextPlantName>
+                {
+                    plants.length === 0 ? (
+                        <Text style={{ ...styles.textStyle, fontSize: 16 }}>Nenhuma plantinha cadastrada</Text>
 
-                <ContainerImage>
-                    <Image
-                        source={require("../images/home_page/ligthning.png")}
-                        style={styles.ligthning}
-                        resizeMode="contain"
-                    />
-                    <Text style={{ ...styles.label_text_style }}>{dataPlant?.data?.illumination}%</Text>
-                </ContainerImage>
-
-                <ContainerImage>
-                    <Image
-                        source={require("../images/home_page/plant.png")}
-                        style={styles.plant}
-                        resizeMode="contain"
-                    />
-                    <Text style={{ ...styles.label_text_style }}>{dataPlant?.data?.weight} Kg</Text>
-                </ContainerImage>
-
-                <ContainerImage style={{ flexDirection: 'row' }}>
-                    <ContainerImage>
-                        <Image
-                            source={require("../images/home_page/thermometer.png")}
-                            style={styles.thermometer}
-                            resizeMode="contain"
+                    ) : (
+                        <SwipeListView
+                            style={styles.listPlants}
+                            data={plants}
+                            renderItem={renderItem}
+                            renderHiddenItem={renderHiddenItem}
+                            rightOpenValue={-85}
+                            disableRightSwipe
+                            keyExtractor={item => item.id}
+                            showsVerticalScrollIndicator={false}
                         />
-                        <Text style={{ ...styles.label_text_style }}>{dataPlant?.data?.celsius} ºC</Text>
-                    </ContainerImage>
+                    )
+                }
 
-                    <ContainerImage>
-                        <Image
-                            source={require("../images/home_page/sensor.png")}
-                            style={styles.sensor}
-                            resizeMode="contain"
-                        />
-                        <Text style={{ ...styles.label_text_style }}>{dataPlant?.data?.humidity}% MC</Text>
-                    </ContainerImage>
-                </ContainerImage>
+
             </Container>
+
+
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible.active}
+                onRequestClose={() => {
+                    setModalVisible({ active: false, type: '' })
+                    setSelectedPlantId(null)
+                }}
+            >
+
+                {
+                    modalVisible.type === 'confirmDelete' ?
+
+                        // Confirmação de exclusão
+                        (
+                            <View style={styles.modalContainer}>
+                                <View style={styles.modalView}>
+                                    <Text style={styles.modalText}>Deseja deletar esta planta?</Text>
+                                    <View style={styles.modalButtons}>
+                                        <TouchableOpacity
+                                            style={[styles.button, styles.buttonCancel]}
+                                            onPress={() => {
+                                                setModalVisible({ active: false, type: '' })
+                                                setSelectedPlantId(null)
+                                            }}
+                                        >
+                                            <Text style={styles.textStyle}>Cancelar</Text>
+                                        </TouchableOpacity>
+
+                                        <TouchableOpacity
+                                            style={[styles.button, styles.buttonDelete]}
+                                            onPress={deletePlant}
+                                        >
+                                            <Text style={styles.textStyle}>Deletar</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+
+                        ) : modalVisible.type === 'newPlant' ? (
+
+                            <View style={styles.modalContainer}>
+                                <View style={styles.modalView}>
+
+                                    <LabelText style={{ ...styles.labelText }}>Nome</LabelText>
+                                    <TextInput
+                                        value={newPlantName}
+                                        style={[styles.textInput, error && styles.errorInput]}
+                                        onChangeText={setNewPlantName}
+                                        placeholder="Nome da planta"
+                                    />
+
+                                    <Text style={styles.errorText}>{error}</Text>
+
+                                    <View style={styles.modalButtons}>
+                                        <TouchableOpacity
+                                            style={[styles.button, styles.buttonCancel]}
+                                            onPress={() => {
+                                                setModalVisible({ active: false, type: '' })
+                                                setSelectedPlantId(null)
+                                            }}
+                                        >
+                                            <Text style={styles.textStyle}>Cancelar</Text>
+                                        </TouchableOpacity>
+
+                                        <TouchableOpacity
+                                            style={[styles.button, styles.buttonDelete]}
+                                            onPress={() => { }}
+                                        >
+                                            <Text style={styles.textStyle}>Adicionar</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+
+                        ) : undefined
+                }
+
+            </Modal>
         </Container>
     )
 }
@@ -100,38 +208,120 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     container: {
+        backgroundColor: '#eee',
+        width: screenWidth * 0.95,
+    },
+    navibar: {
+        bottom: 20,
+        elevation: 20,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        width: screenWidth,
+    },
+    buttonNavibar: {
+        borderRadius: 15,
+        backgroundColor: '#78d600',
+        justifyContent: 'center',
+        width: screenWidth * 0.55,
+        height: screenHeight * 0.05,
+    },
+    listPlants: {
+        height: screenHeight * 0.75
+    },
+
+
+
+    // Card da Planta
+    frontCardPlant: {
+        margin: 5,
+        elevation: 8,
+        paddingLeft: 15,
+        borderRadius: 50,
+        justifyContent: 'center',
+        width: screenWidth * 0.8,
+        backgroundColor: '#fff',
+        height: screenHeight * 0.08,
+    },
+    backCardPlant: {
         flex: 1,
-        elevation: 5,
+        paddingLeft: 15,
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0)',
+    },
+
+
+    deleteBtnCard: {
+        margin: 5,
+        right: 10,
         borderRadius: 20,
         alignItems: 'center',
-        width: screenWidth * 0.95,
-        justifyContent: 'flex-end',
-        backgroundColor: '#2D9831',
+        justifyContent: 'center',
+        width: screenWidth * 0.17,
+        height: screenHeight * 0.075,
+        backgroundColor: 'red',
     },
-    statsButton: {
-        margin: 25,
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        backgroundColor: '#ffffff',
+    backTextWhite: {
+        color: '#FFF',
     },
-    label_text_style: {
+    modalContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalView: {
+        margin: 20,
+        padding: 35,
+        elevation: 5,
+        shadowRadius: 4,
+        borderRadius: 20,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowColor: '#000',
+        shadowOpacity: 0.25,
+        alignItems: 'center',
+        backgroundColor: 'white',
+    },
+    modalText: {
         fontSize: 16,
+        color: '#000',
+        marginBottom: 15,
+        textAlign: 'center',
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    button: {
+        padding: 10,
+        elevation: 2,
+        borderRadius: 20,
+        marginHorizontal: 10,
+    },
+    buttonCancel: {
+        backgroundColor: '#2196F3',
+    },
+    buttonDelete: {
+        backgroundColor: '#FF0000',
+    },
+    textStyle: {
+        fontSize: 14,
         color: '#fff',
         fontWeight: 'bold',
+        textAlign: 'center',
     },
-    ligthning: {
-        marginTop: 30,
-        height: '35%',
+    textInput: {
+        borderWidth: 3,
+        borderColor: '#78d600',
+        backgroundColor: 'rgba(255,255,255,0.9)',
     },
-    plant: {
-        height: '80%',
-    },
-    sensor: {
-        height: '25%',
-    },
-    thermometer: {
-        height: '25%',
+    labelText: {
+        fontSize: 18,
+        color: '#78d600',
+        textAlign: 'left',
     },
 })
 
