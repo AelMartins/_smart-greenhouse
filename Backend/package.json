@@ -15,6 +15,7 @@
     "@prisma/client": "^5.14.0",
     "joi": "^17.13.1",
     "joi-objectid": "^4.0.2",
-    "klaw-sync": "^6.0.0"
+    "klaw-sync": "^6.0.0",
+    "node-cron": "^3.0.3"
   }
 }
