@@ -1,5 +1,5 @@
 const schema = require('./data-plants-schema')
-const { findAll, findLastData, create } = require('./data-plants-controller')
+const { findAllByPlant, findAll, findLastData, create, destroy } = require('./data-plants-controller')
 
 const plugin = {
     name: 'data-plants-route',
@@ -9,6 +9,14 @@ const plugin = {
             {
                 method: 'GET',
                 path: '/data-plants/{plant_id}',
+                options: {
+                    handler: findAllByPlant,
+                    validate: schema.findAllByPlant
+                }
+            },
+            {
+                method: 'GET',
+                path: '/data-plants',
                 options: {
                     handler: findAll,
                     validate: schema.findAll
@@ -29,7 +37,15 @@ const plugin = {
                     handler: create,
                     validate: schema.create
                 }
-            }
+            },
+            {
+                method: 'DELETE',
+                path: '/data-plants/{id}',
+                options: {
+                    handler: destroy,
+                    validate: schema.destroy
+                }
+            },
         ])
     }
 }

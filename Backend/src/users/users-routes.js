@@ -1,5 +1,5 @@
 const schema = require('./users-schema')
-const { findById, findAll, login, create } = require('./users-controller')
+const { findById, findAll, login, create, update, destroy } = require('./users-controller')
 
 const plugin = {
     name: 'users-route',
@@ -36,6 +36,22 @@ const plugin = {
                 options: {
                     handler: create,
                     validate: schema.create
+                }
+            },
+            {
+                method: 'PUT',
+                path: '/users',
+                options: {
+                    handler: update,
+                    validate: schema.update
+                }
+            },
+            {
+                method: 'DELETE',
+                path: '/users/{id}',
+                options: {
+                    handler: destroy,
+                    validate: schema.destroy
                 }
             },
         ])

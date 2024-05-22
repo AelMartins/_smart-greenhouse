@@ -46,7 +46,6 @@ const plugin = {
                     validate: schema.destroy
                 }
             },
-
         ])
     }
 }

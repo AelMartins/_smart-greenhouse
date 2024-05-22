@@ -46,10 +46,33 @@ const create = {
     })
 }
 
+const update = {
+    payload: Joi.object({
+        id: Joi
+            .objectId()
+            .required(),
+        name: Joi
+            .string(),
+        email: Joi
+            .string(),
+        password: Joi
+            .string(),
+    })
+}
+
+const destroy = {
+    params: Joi.object({
+        id: Joi
+            .objectId()
+            .required()
+    })
+}
 
 module.exports = {
     findById,
     findAll,
     login,
     create,
+    update,
+    destroy,
 }

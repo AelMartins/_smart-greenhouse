@@ -44,9 +44,31 @@ const create = async (request, h) => {
     }
 }
 
+const update = async (request, h) => {
+    try {
+        const result = await business.update(request.payload)
+        return h.response({ message: 'Usuário atualizado com sucesso!', result })
+
+    } catch (error) {
+        return responseError(h, error)
+    }
+}
+
+const destroy = async (request, h) => {
+    try {
+        const result = await business.destroy(request.params.id)
+        return h.response({ message: 'Usuário deletado com sucesso!', result })
+
+    } catch (error) {
+        return responseError(h, error)
+    }
+}
+
 module.exports = {
     findById,
     findAll,
     login,
     create,
+    update,
+    destroy,
 }

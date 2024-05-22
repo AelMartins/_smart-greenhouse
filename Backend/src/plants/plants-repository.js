@@ -53,9 +53,26 @@ const update = async (id, payload) => {
 
 const destroy = async (id) => {
     try {
-        const find = await findById(id)
+        const find = await prisma.plants.findUnique({
+            where: { id },
+            select: {
+                id: true,
+                data_plants: true
+            }
+        })
         if (!find) return
 
+
+        /**
+         * Deleta todos os dados da Planta
+         */
+        const dataPlantsRepository = require('../data_plants/data-plants-repository')
+        find.data_plants.forEach(async data => {
+            await dataPlantsRepository.destroy(data.id)
+        });
+
+
+        // Deleta a planta
         const result = await prisma.plants.delete({
             where: { id },
             select: {

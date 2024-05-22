@@ -1,6 +1,16 @@
 const prisma = require('../../prisma')
 
 
+const findById = async (id) => {
+    try {
+        const result = await prisma.data_plants.findUnique({ where: { id } })
+        return result
+
+    } catch (err) {
+        throw err
+    }
+}
+
 const findAll = async (options) => {
     try {
         const result = await prisma.data_plants.findMany({
@@ -44,8 +54,22 @@ const create = async (payload) => {
     }
 }
 
+const destroy = async (id) => {
+    try {
+        const find = await findById(id)
+        if (!find) return
+
+        const result = await prisma.data_plants.delete({ where: { id } })
+        return result
+
+    } catch (err) {
+        throw err
+    }
+}
+
 module.exports = {
     findAll,
     findLastData,
-    create
+    create,
+    destroy
 }

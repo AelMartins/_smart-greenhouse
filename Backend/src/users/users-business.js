@@ -26,9 +26,19 @@ const create = async (payload) => {
     return await repository.create(payload)
 }
 
+const update = async (payload) => {
+    return await repository.update(payload.id, { ...payload, id: undefined })
+}
+
+const destroy = async (id) => {
+    return await repository.destroy(id)
+}
+
 module.exports = {
     findById,
     findAll,
     login,
     create,
+    update,
+    destroy
 }
