@@ -14,24 +14,24 @@ function generateDataToPlants() {
     const plants = require('./src/plants/plants-repository')
     const dataPlants = require('./src/data_plants/data-plants-repository')
 
-    cron.schedule('*/10 * * * *', async () => {
-        const allPlants = await plants.findAll({})
-        console.log(`Total de Plantas: ${allPlants.length}`)
+    cron.schedule('* * * * *', async () => {
+        const allPlants = await plants.findAll({ select: { id: true, name: true, data_plants: true } })
 
         const genRandom = () => {
             return Math.floor(Math.random() * 101);
         }
 
         allPlants.forEach(async plant => {
-            const object = {
-                plant_id: plant.id,
-                illumination: genRandom(),
-                celsius: genRandom(),
-                humidity: genRandom(),
-                weight: genRandom() * 10
+            if (plant.data_plants.length < 25) {
+                const object = {
+                    plant_id: plant.id,
+                    illumination: genRandom(),
+                    celsius: genRandom(),
+                    humidity: genRandom(),
+                    weight: genRandom() * 10
+                }
+                await dataPlants.create(object)
             }
-            await dataPlants.create(object)
-            console.log(`Planta ${plant.name}: ${JSON.stringify(object)}`)
         })
     })
 }
