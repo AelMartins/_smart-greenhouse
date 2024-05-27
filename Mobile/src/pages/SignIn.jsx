@@ -7,31 +7,32 @@ import { Container, ButtonCard, Button, ButtonText, TextInput, LabelText } from 
 
 
 const SignIn = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-
     const navigation = useNavigation();
+    const [email, setEmail] = useState('');
+    const [error, setError] = useState('');
+    const [password, setPassword] = useState('');
+
+
+    const defineError = (message, time = 2500) => {
+        setError(message)
+        setTimeout(() => setError(''), time)
+        console.error(message)
+    }
 
     const handleSignIn = async () => {
-        // if (!email || !password) {
-        //     setError('Preencha os campos corretamente');
-        //     setTimeout(() => setError(''), 5000)
-        //     return
-        // }
+        if (!email || !password) {
+            defineError('Preencha os campos corretamente')
+            return
+        }
 
-        // await api.post(`/users/login`, { email, password })
-        await api.post(`/users/login`, { email: 'joao@teste.com', password: 'jp123' })
+        await api.post(`/users/login`, { email, password })
             .then(async res => {
-                await AsyncStorage.setItem('user_id', res.data.id)
-                navigation.navigate('Home')
+                // Adiciona dados do usuário a sessão
+                navigation.navigate('Home', res)
                 setEmail('')
                 setPassword('')
             })
-            .catch(err => {
-                setError(err.response.data.message)
-                setTimeout(() => setError(''), 5000)
-            })
+            .catch(err => defineError(err?.response?.data?.message || err.message))
     };
 
     const handleSignUp = () => {

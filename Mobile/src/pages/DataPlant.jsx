@@ -1,55 +1,72 @@
-const api = require('../utils/api')
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-const { screenWidth, screenHeight } = require('../utils/dimensions')
 import { Container, ContainerImage, TextPlantName } from '../Styles';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 
+const api = require('../utils/api')
+const { screenWidth, screenHeight } = require('../utils/dimensions');
 
 
-
-const DataPlant = () => {
+const DataPlant = (data) => {
+    const navigation = useNavigation()
     const [dataPlant, setDataPlant] = useState({})
+    const [error, setError] = useState(null)
+    const { plant_id, plant_name } = data.route.params
+    const handleChart = (plant_id) => navigation.navigate('Statistics', { plant_id })
 
-    let setOrderDataInApi = 1
+
     const fetchData = async () => {
         try {
-            const plantData = await api.get('/plants', { user_id: global.SessionUser.id, reverse: setOrderDataInApi % 2 == 0 })
-            setDataPlant(plantData)
-            setOrderDataInApi++
+            await api.get(`/data-plants/last-data/${plant_id}`)
+                .then(res => {
+                    let { weight, illumination, celsius, humidity } = res.result
+
+                    // Validação da escala de Peso
+                    if (weight < 1000) {
+                        weight = `${weight} g`;
+                    } else {
+                        const weightInKg = (weight / 1000).toFixed(2);
+                        weight = `${weightInKg} kg`;
+                    }
+
+                    const result = {
+                        weight,
+                        illumination: `${illumination}%`,
+                        celsius: `${celsius}ºC`,
+                        humidity: `${humidity}% MC`
+                    }
+
+                    setDataPlant(result)
+                    setError(null)
+                })
 
         } catch (error) {
-            console.error('Error fetching data:', error)
+            const responseError = error?.response?.data?.message
+            if (error?.response?.status !== 404) await fetchData()
+
+            setError(responseError)
+            console.error(responseError || error.message)
         }
     }
 
-
-    // Gatilho inicial para consultas na Api
     useEffect(() => {
         fetchData()
-        const interval = setInterval(fetchData, 2000)
-
+        const interval = setInterval(fetchData, 10 * 1000)
         return () => clearInterval(interval)
     }, [])
 
-    const navigation = useNavigation()
-    const handleChart = () => {
-        navigation.navigate('Statistics')
-    }
 
     return (
         <Container style={styles.background}>
             <Container style={styles.container}>
 
-                <TouchableOpacity style={{ ...styles.statsButton, elevation: 20 }} onPress={handleChart}>
+                <TouchableOpacity style={{ ...styles.statsButton, elevation: 20 }} onPress={() => handleChart(plant_id)}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        {/* <MaterialCommunityIcons name="chart-line-stacked" size={24} color="black" /> */}
                         <Text style={{ fontSize: 20, color: '#2D9831' }}>Estatísticas</Text>
                     </View>
                 </TouchableOpacity>
 
-
-                <TextPlantName style={styles.title_plant}>{dataPlant?.name}</TextPlantName>
+                <TextPlantName style={styles.title_plant}>{plant_name}</TextPlantName>
 
                 <ContainerImage>
                     <Image
@@ -57,7 +74,7 @@ const DataPlant = () => {
                         style={styles.ligthning}
                         resizeMode="contain"
                     />
-                    <Text style={{ ...styles.label_text_style }}>{dataPlant?.data?.illumination}%</Text>
+                    <Text style={{ ...styles.label_text_style }}>{dataPlant?.illumination}</Text>
                 </ContainerImage>
 
                 <ContainerImage>
@@ -66,7 +83,14 @@ const DataPlant = () => {
                         style={styles.plant}
                         resizeMode="contain"
                     />
-                    <Text style={{ ...styles.label_text_style }}>{dataPlant?.data?.weight} Kg</Text>
+                    {
+                        !error ?
+                            <Text style={{ ...styles.label_text_style }}>{dataPlant?.weight}</Text> :
+                            <Text style={styles.errorText}>{error}</Text>
+                    }
+
+
+
                 </ContainerImage>
 
                 <ContainerImage style={{ flexDirection: 'row' }}>
@@ -76,7 +100,7 @@ const DataPlant = () => {
                             style={styles.thermometer}
                             resizeMode="contain"
                         />
-                        <Text style={{ ...styles.label_text_style }}>{dataPlant?.data?.celsius} ºC</Text>
+                        <Text style={{ ...styles.label_text_style }}>{dataPlant?.celsius}</Text>
                     </ContainerImage>
 
                     <ContainerImage>
@@ -85,7 +109,7 @@ const DataPlant = () => {
                             style={styles.sensor}
                             resizeMode="contain"
                         />
-                        <Text style={{ ...styles.label_text_style }}>{dataPlant?.data?.humidity}% MC</Text>
+                        <Text style={{ ...styles.label_text_style }}>{dataPlant?.humidity}</Text>
                     </ContainerImage>
                 </ContainerImage>
             </Container>
@@ -132,6 +156,12 @@ const styles = StyleSheet.create({
     },
     thermometer: {
         height: '25%',
+    },
+    errorText: {
+        color: '#fff',
+        fontSize: 20,
+        marginBottom: 10,
+        fontWeight: 'bold',
     },
 })
 

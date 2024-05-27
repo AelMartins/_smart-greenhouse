@@ -8,39 +8,65 @@ const { screenWidth, screenHeight } = require('../utils/dimensions');
 
 
 
-const Statistics = () => {
-    const [dataChart, setDataChart] = useState({
-        labels: ['', '', '', '', ''],
+const Statistics = (data) => {
+    const { plant_id } = data.route.params
+
+    const defaultDataChart = {
+        labels: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'],
         datasets: [{ data: [0, 0, 0, 0, 0] }]
-    })
+    }
+
+    const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [dataChart, setDataChart] = useState(defaultDataChart)
     const [selectedChartData, setSelectedChartData] = useState('weight')
 
 
     // Gatilho inicial para consultas na Api
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // const statisticData = await api.get(`/data?type=${selectedChartData}`)
-                const statisticData = await api.get('/data', { user_id: global.SessionUser.id, type: selectedChartData })
-                setDataChart({
-                    labels: statisticData.labels,
-                    datasets: [{ data: statisticData.data }]
+    const fetchData = async () => {
+        try {
+            await api.get(`/data-plants/${plant_id}`)
+                .then(res => {
+                    if (res.result.length > 0) {
+                        const data = res.result.map(item => item[selectedChartData])
+                        setDataChart({
+                            labels: defaultDataChart.labels,
+                            datasets: data.length > 0 ? [{ data }] : defaultDataChart.datasets
+                        })
+                        setError(null)
+
+                    } else {
+                        throw new Error('Nenhum dado registrado')
+                    }
                 })
 
-            } catch (error) {
-                console.error('Error fetching data:', error)
-            }
-        };
+        } catch (error) {
+            if (error?.response?.status && error?.response?.status !== 404) await fetchData()
 
+            const messageError = error?.response?.data?.message || error.message
+            setError(messageError)
+
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
         fetchData()
-        const interval = setInterval(fetchData, 2000)
-
+        const interval = setInterval(fetchData, 10 * 1000)
         return () => clearInterval(interval)
     }, [selectedChartData])
+
 
     // Define tipo de Dado exibido no Gráfico
     const handlePickerChange = (itemValue) => {
         setSelectedChartData(itemValue)
+        setDataChart({
+            labels: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'],
+            datasets: [{ data: [0, 0, 0, 0, 0] }]
+        })
+
+        fetchData()
     }
 
     // Renderiza os itens do seletor de Dados
@@ -59,24 +85,30 @@ const Statistics = () => {
     return (
         <Container style={styles.background}>
             <Container style={styles.container}>
+                {loading ? (
+                    <Text style={styles.errorText}>Carregando...</Text>
+                ) : !error ? (
+                    <HeaderChart style={styles.header_chart}>
+                        <Text style={styles.title}>Dados:</Text>
 
-                <HeaderChart style={styles.header_chart}>
-                    <Text style={styles.title}>Dados:</Text>
+                        <View style={styles.picker_container}>
+                            <Picker
+                                style={styles.picker}
+                                selectedValue={selectedChartData}
+                                onValueChange={handlePickerChange}>
+                                {renderPickerItems([
+                                    { label: 'Peso', value: 'weight' },
+                                    { label: 'Iluminação', value: 'illumination' },
+                                    { label: 'Umidade', value: 'humidity' },
+                                    { label: 'Temperatura', value: 'celsius' },
+                                ])}
+                            </Picker>
+                        </View>
+                    </HeaderChart>
+                ) : (
+                    <Text style={styles.errorText}>{error}</Text>
+                )}
 
-                    <View style={styles.picker_container}>
-                        <Picker
-                            style={styles.picker}
-                            selectedValue={selectedChartData}
-                            onValueChange={handlePickerChange}>
-                            {renderPickerItems([
-                                { label: 'Peso', value: 'weight' },
-                                { label: 'Iluminação', value: 'illumination' },
-                                { label: 'Umidade', value: 'humidity' },
-                                { label: 'Temperatura', value: 'celsius' },
-                            ])}
-                        </Picker>
-                    </View>
-                </HeaderChart>
 
                 <LineChart
                     width={screenWidth * 0.95}
@@ -151,6 +183,13 @@ const styles = StyleSheet.create({
     line_chart: {
         borderRadius: 10,
         backgroundColor: 'rgba(0,0,0,0)',
+    },
+    errorText: {
+        fontSize: 22,
+        marginTop: 10,
+        color: '#2D9831',
+        marginBottom: 30,
+        fontWeight: 'bold',
     },
 });
 

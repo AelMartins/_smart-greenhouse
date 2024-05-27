@@ -58,8 +58,8 @@ const SignUp = () => {
                 }, 1500)
             })
             .catch(err => {
-                console.error('Erro no cadastro de usuário', err)
-                setMessageWithTimeout({ message: err.message, error: true, email: !err.email })
+                console.error(err.response.status, err.response.data.message)
+                setMessageWithTimeout({ message: err.response.data.message, error: true, email: !err.email })
             })
     }
 
