@@ -4,6 +4,7 @@ Estufa Inteligente (Smart Greenhouse)
 FATEC Dr. Thomaz Novelino
 26/05/2024
 ```
+![Rectangle 2](https://github.com/AelMartins/_smart-greenhouse/assets/113877140/b30bfe49-f10f-48a3-b855-f1908a2d181a)
 
 ***
 
@@ -19,7 +20,7 @@ Neste artefato, você encontrará algo similar a um monólogo informal que apont
 - [CONTEXTUALIZANDO O CENÁRIO](#contextualizando-o-cenário)
 - [IMAGINANDO UMA SOLUÇÃO](#imaginando-uma-solução)
 - [SIMULANDO UMA JORNADA DE USUÁRIO](#simulando-uma-jornada-de-usuário)
-- [CONCLUSÃO](#conclusão)
+- [CONCLUSÃO GERAL](#conclusão-geral)
 
 ---
 
@@ -51,8 +52,107 @@ Isso poderia ser possível se tivermos os sensores necessários para o controle,
 
 ## SIMULANDO UMA JORNADA DE USUÁRIO
 
+![Group 1](https://github.com/AelMartins/_smart-greenhouse/assets/113877140/4df8f34d-6594-45ae-b87f-55d8d2c0c999)
 
-## CONCLUSÃO
+### Cotidiano de Maria:
+
+- Manhã: Acorda cedo e mal tem tempo para checar as plantas antes das aulas online.
+- Meio-dia: Tenta regar as plantas durante o intervalo das aulas, mas frequentemente erra na quantidade de água.
+- Tarde: Sente-se culpada por não conseguir dar atenção adequada às plantas enquanto trabalha.
+- Noite: Vê que algumas plantas estão piorando, mas está exausta demais para cuidar delas.
+
+### Dificuldades:
+
+- Falta de tempo para cuidados regulares.
+- Incerteza sobre as necessidades específicas de cada planta.
+- Frustração e culpa por não conseguir mantê-las saudáveis.
+
+### Como seria com o nosso Sistema Automatizado?
+
+- Manhã: Verifica o aplicativo da estufa automatizada e vê que todas as plantas estão em condições ótimas.
+- Meio-dia: Recebe uma notificação sobre ajustes automáticos na irrigação e vê gráficos de crescimento das plantas.
+- Tarde: Recebe recomendações do aplicativo para adicionar nutrientes, que agenda para o fim de semana.
+- Noite: Relaxa sabendo que suas plantas estão bem cuidadas e aprecia a beleza delas no escritório.
+
+### Benefícios:
+
+- Tempo economizado: Não precisa se preocupar constantemente com a rega e a iluminação.
+- Cuidado preciso: As plantas recebem exatamente o que precisam.
+- Tranquilidade: Pode focar em seus estudos e trabalho, sabendo que as plantas estão em boas mãos.
+- Aprendizado: O aplicativo oferece insights e recomendações, facilitando o aprendizado sobre o cuidado com plantas.
+
+### Resultado final.
+
+Com o sistema automatizado, Maria transforma a experiência de cuidar das plantas de uma tarefa estressante e negligenciada para uma atividade prazerosa e eficiente. O sistema cuida das necessidades diárias das plantas, permitindo que Maria aproveite seu tempo e mantenha um ambiente de trabalho verde e saudável.
+
+![Group 2](https://github.com/AelMartins/_smart-greenhouse/assets/113877140/5a9d4906-6a22-47ac-b811-173b17bd5dca)
+
+### Cotidiano de Pedro:
+
+- Manhã: Passa a primeira hora inspecionando plantas, ajustando manualmente a umidade e a iluminação.
+- Meio-dia: Prepara e aplica nutrientes manualmente, ajusta ventilação e temperatura.
+- Tarde: Realiza experimentos, ajusta parâmetros do ambiente manualmente.
+- Noite: Faz uma última ronda, preocupado com possíveis variações durante a noite, ficando até tarde no laboratório.
+
+### Dificuldades:
+
+- Tarefas manuais demoradas.
+- Dificuldade em manter condições ideais.
+- Distração e cansaço devido à necessidade constante de monitoramento.
+
+### Com o nosso produto:
+
+- Manhã: Verifica o painel de controle e vê que todas as plantas estão em condições ideais.
+- Meio-dia: Recebe notificações de ajustes automáticos e revisa relatórios detalhados.
+- Tarde: Realiza experimentos com mais eficiência, programando parâmetros no sistema.
+- Noite: Verifica pelo aplicativo e sai mais cedo, confiante no monitoramento automático.
+
+### Benefícios:
+
+- Eficiência: Economia de tempo nas tarefas manuais.
+- Precisão: Cuidados específicos e ideais para cada planta.
+- Foco: Maior concentração em experimentos e pesquisa.
+- Tranquilidade: Confiança no monitoramento e ajustes automáticos.
+
+### Resultado final
+
+Com o sistema automatizado, Pedro transforma o cuidado das plantas em uma operação eficiente e precisa, permitindo-lhe dedicar mais tempo à pesquisa enquanto mantém suas plantas em ótimas condições.
+
+![Group 3](https://github.com/AelMartins/_smart-greenhouse/assets/113877140/919c352d-41a5-4a15-afd2-5c80e223fd32)
+
+### Cotidiano de Adelaine:
+
+- Manhã: Inspeção manual dos campos, coordenação da irrigação.
+- Meio-dia: Revisão de relatórios e aplicação manual de fertilizantes e pesticidas.
+- Tarde: Supervisão da colheita, monitoramento de condições climáticas e ajustes manuais.
+- Noite: Verificação final dos campos, preocupações constantes com a precisão dos cuidados.
+
+### Dificuldades:
+
+- Ineficiência na irrigação.
+- Erros na aplicação de nutrientes e pesticidas.
+- Necessidade de monitoramento constante.
+- Exaustão física e mental.
+
+### Com o nosso Sistema Automatizado:
+
+- Manhã: Verifica o painel de controle que já ajustou a irrigação conforme necessário.
+- Meio-dia: Recebe notificações e recomendações precisas para aplicação de fertilizantes e pesticidas.
+- Tarde: Supervisiona colheita enquanto o sistema monitora continuamente os campos.
+- Noite: Revisa relatórios e previsões, sabendo que o sistema continuará monitorando.
+
+### Benefícios:
+
+- Eficiência na irrigação.
+- Precisão na aplicação de nutrientes e pesticidas.
+- Monitoramento contínuo e rápido.
+- Redução de cansaço e estresse.
+
+### Resultado final
+
+Com o sistema automatizado, Adelaine transforma a gestão de sua fazenda em uma operação eficiente e precisa, permitindo maior foco em tarefas estratégicas e melhor produtividade, enquanto mantém as culturas saudáveis.
+
+## CONCLUSÃO GERAL
 
 Com tudo dito até agora, podemos concluir que há uma oportunidade de criar algo útil tanto para as pessoas que amam cultivar plantas quanto para aquelas que fazem disso sua profissão. A seguir, listamos alguns tópicos que resumem o conteúdo para um melhor entendimento da proposta e para orientar a nós, desenvolvedores do projeto, sobre o foco que deve ser atingido e qual é o resultado esperado deste projeto.
 
