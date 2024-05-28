@@ -12,7 +12,7 @@ const DataPlant = (data) => {
     const [dataPlant, setDataPlant] = useState({})
     const [error, setError] = useState(null)
     const { plant_id, plant_name } = data.route.params
-    const handleChart = (plant_id) => navigation.navigate('Statistics', { plant_id })
+    const handleChart = (plant_id) => navigation.navigate('Statistics', { plant_id, plant_name })
 
 
     const fetchData = async () => {

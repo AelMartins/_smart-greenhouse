@@ -9,30 +9,35 @@ import { Container, ButtonCard, Button, ButtonText, TextInput, LabelText } from 
 const SignIn = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
-    const [error, setError] = useState('');
+    const [messageRequest, setMessageRequest] = useState(null);
     const [password, setPassword] = useState('');
 
 
-    const defineError = (message, time = 2500) => {
-        setError(message)
-        setTimeout(() => setError(''), time)
-        console.error(message)
+    const defineMessage = (message, set, time = 2500) => {
+        set(message)
+        setTimeout(() => set(''), time)
+        console.log(JSON.stringify(message))
     }
 
     const handleSignIn = async () => {
         if (!email || !password) {
-            defineError('Preencha os campos corretamente')
+            defineMessage({ error: true, msg: 'Preencha os campos corretamente' }, setMessageRequest)
             return
         }
 
+        setMessageRequest({ msg: 'Carregando...' })
+
         await api.post(`/users/login`, { email, password })
             .then(async res => {
+                defineMessage({ msg: `Login realizado com sucesso` }, setMessageRequest, 1500)
+
                 // Adiciona dados do usuário a sessão
                 navigation.navigate('Home', res)
                 setEmail('')
                 setPassword('')
+
             })
-            .catch(err => defineError(err?.response?.data?.message || err.message))
+            .catch(err => defineMessage({ error: true, msg: err?.response?.data?.message || 'Erro ao realizar Login' }, setMessageRequest))
     };
 
     const handleSignUp = () => {
@@ -49,7 +54,7 @@ const SignIn = () => {
                 <LabelText style={styles.labelText}>E-mail</LabelText>
                 <TextInput
                     value={email}
-                    style={[styles.textInput, error && styles.errorInput]}
+                    style={[styles.textInput, messageRequest?.error && styles.errorInput]}
                     onChangeText={setEmail}
                     placeholder="Digite seu e-mail"
                 />
@@ -57,13 +62,13 @@ const SignIn = () => {
                 <LabelText style={styles.labelText}>Senha</LabelText>
                 <TextInput
                     value={password}
-                    style={[styles.textInput, error && styles.errorInput]}
+                    style={[styles.textInput, messageRequest?.error && styles.errorInput]}
                     onChangeText={setPassword}
                     placeholder="Senha"
                     secureTextEntry={true}
                 />
 
-                <Text style={styles.errorText}>{error}</Text>
+                <Text style={messageRequest?.error ? styles.errorText : styles.loadingRequestText}>{messageRequest?.msg || ''}</Text>
 
                 <ButtonCard style={styles.buttonCard}>
                     <Button style={styles.button('signin')} onPress={() => handleSignIn()}>
@@ -116,7 +121,18 @@ const styles = StyleSheet.create({
     },
     errorText: {
         color: 'red',
+        fontSize: 16,
         marginBottom: 10,
+    },
+    loadingRequestText: {
+        fontSize: 18,
+        color: '#78d600',
+        marginBottom: 10,
+        fontWeight: 'bold',
+        textShadowRadius: 4,
+        textShadowColor: 'black',
+        textShadowOffset: { width: -2, height: 2 }, // Deslocamento da sombra
+
     },
 });
 

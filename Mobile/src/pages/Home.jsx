@@ -18,20 +18,24 @@ const Home = (data) => {
         return formattedName
     })()
 
+
+    const defineMessage = (message, set, time = 2500) => {
+        set(message)
+        setTimeout(() => set(''), time)
+        console.log(JSON.stringify(message))
+    }
+
     const [error, setError] = useState('');
+
+    const [modalNewPlant, setModalNewPlant] = useState(false);
+    const [messageNewPlant, setMessageNewPlant] = useState(null);
+
+
     const [plants, setPlants] = useState([]);
     const [loading, setLoading] = useState(true);
     const [newPlantName, setNewPlantName] = useState('');
-    const [modalNewPlant, setModalNewPlant] = useState(false);
-    const [selectedPlantDelete, setSelectedPlantDelete] = useState(null);
     const [modalDeletePlant, setModalDeletePlant] = useState(false);
-
-
-    const defineError = (message, time = 2500) => {
-        setError(message)
-        setTimeout(() => setError(''), time)
-        console.error(message)
-    }
+    const [selectedPlantDelete, setSelectedPlantDelete] = useState(null);
 
 
     /**
@@ -43,7 +47,7 @@ const Home = (data) => {
                 .then(res => setPlants(res.result))
 
         } catch (err) {
-            defineError(err.message)
+            defineMessage(err.message, setError)
         } finally {
             setLoading(false)
         }
@@ -62,21 +66,29 @@ const Home = (data) => {
      */
     const addNewPlant = async () => {
         if (!newPlantName) {
-            defineError('Preencha os campos corretamente')
+            defineMessage('Preencha os campos corretamente', setMessageNewPlant)
             return
         }
 
         try {
+            setMessageNewPlant({ msg: 'Carregando...' })
+
             await api.post('/plants', {
                 user_id: user?.id,
                 name: newPlantName,
-            })
+            }).then(res => defineMessage({ msg: `${newPlantName} adicionada com sucesso` }, setMessageNewPlant, 1500))
+
+            // Atualizar a lista de plantas
             await fetchData()
+
             setNewPlantName('')
             setModalNewPlant(false) // Desabilitar
 
         } catch (err) {
-            defineError(err.response?.data?.message || 'Erro ao adicionar planta')
+            defineMessage({
+                error: true,
+                msg: err.response?.data?.message || 'Erro ao adicionar planta'
+            }, setMessageNewPlant)
         }
     }
 
@@ -92,7 +104,7 @@ const Home = (data) => {
             setSelectedPlantDelete(null)
 
         } catch (error) {
-            defineError(error.response?.data || 'Erro ao deletar planta')
+            defineMessage(error.response?.data || 'Erro ao deletar planta', setError)
         }
     }
 
@@ -102,11 +114,11 @@ const Home = (data) => {
     */
     const handlerDataPlant = (plant_id, plant_name) => navigation.navigate('DataPlant', { plant_id, plant_name })
     const renderItem = ({ item }) => (
-        <Card style={styles.frontCardPlant}>
-            <TouchableOpacity onPress={() => { handlerDataPlant(item.id, item.name) }}>
+        <TouchableOpacity activeOpacity={1} onPress={() => { handlerDataPlant(item.id, item.name) }}>
+            <Card style={styles.frontCardPlant}>
                 <Text style={{ ...styles.textStyle, fontSize: 18, color: '#78d600' }}>{item.name}</Text>
-            </TouchableOpacity>
-        </Card>
+            </Card>
+        </TouchableOpacity>
     );
 
     const renderHiddenItem = (data) => (
@@ -168,17 +180,18 @@ const Home = (data) => {
                         <Text style={styles.modalText}>Deseja deletar {selectedPlantDelete?.name}?</Text>
                         <View style={styles.modalButtons}>
                             <TouchableOpacity
-                                style={[styles.button, styles.buttonCancel]}
+                                style={[styles.button, styles.buttonPref('cancel').card]}
                                 onPress={() => {
                                     setModalDeletePlant(false); // Desabilitar Modal
                                     setSelectedPlantDelete(null);
                                 }}>
-                                <Text style={styles.textStyle}>Cancelar</Text>
+                                <Text style={styles.buttonPref('cancel').text}>Cancelar</Text>
                             </TouchableOpacity>
+
                             <TouchableOpacity
-                                style={[styles.button, styles.buttonDelete]}
+                                style={[styles.button, styles.buttonPref('delete').card]}
                                 onPress={deletePlant}>
-                                <Text style={styles.textStyle}>Deletar</Text>
+                                <Text style={styles.buttonPref('delete').text}>Deletar</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -199,18 +212,20 @@ const Home = (data) => {
                             onChangeText={setNewPlantName}
                             placeholder="Nome da planta"
                         />
-                        <Text style={styles.errorText}>{error}</Text>
+
+                        <Text style={messageNewPlant?.error ? styles.errorText : styles.loadingRequestText}>{messageNewPlant?.msg || ''}</Text>
+
                         <View style={styles.modalButtons}>
                             <TouchableOpacity
-                                style={[styles.button, styles.buttonCancel]}
+                                style={[styles.button, styles.buttonPref('cancel').card]}
                                 onPress={() => {
                                     setModalNewPlant(false); // Desabilitar Modal
                                     setSelectedPlantDelete(null);
                                 }}>
-                                <Text style={styles.textStyle}>Cancelar</Text>
+                                <Text style={styles.buttonPref('cancel').text}>Cancelar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.button, styles.buttonDelete]} onPress={addNewPlant}>
-                                <Text style={styles.textStyle}>Adicionar</Text>
+                            <TouchableOpacity style={[styles.button, styles.buttonPref('add').card]} onPress={addNewPlant}>
+                                <Text style={styles.buttonPref('add').text}>Adicionar</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -230,6 +245,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#eee',
         width: screenWidth * 0.95,
     },
+
+    // Barra de Navegação
     navibar: {
         bottom: 20,
         elevation: 20,
@@ -239,6 +256,7 @@ const styles = StyleSheet.create({
         minHeight: screenHeight * 0.15,
         maxHeight: screenHeight * 0.15
     },
+    // Botão navbar
     buttonNavibar: {
         borderRadius: 15,
         backgroundColor: '#78d600',
@@ -272,6 +290,7 @@ const styles = StyleSheet.create({
     },
 
 
+    // 
     deleteBtnCard: {
         margin: 5,
         right: 10,
@@ -285,6 +304,9 @@ const styles = StyleSheet.create({
     backTextWhite: {
         color: '#FFF',
     },
+
+
+    // Estilização de Modal
     modalContainer: {
         flex: 1,
         alignItems: 'center',
@@ -323,10 +345,32 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     buttonCancel: {
-        backgroundColor: '#2196F3',
+        card: {
+            borderWidth: 2,
+            borderColor: 'red',
+            backgroundColor: '#fff',
+        },
+        text: {
+            fontSize: 14,
+            color: 'red',
+            fontWeight: 'bold',
+            textAlign: 'center',
+        }
     },
-    buttonDelete: {
-        backgroundColor: '#FF0000',
+    buttonPref: (type) => {
+        return {
+            card: {
+                borderWidth: 2,
+                borderColor: ['delete', 'cancel'].includes(type) ? 'red' : '#78d600',
+                backgroundColor: type === 'delete' ? 'red' : type === 'add' ? '#78d600' : '#fff',
+            },
+            text: {
+                fontSize: 14,
+                fontWeight: 'bold',
+                textAlign: 'center',
+                color: ['delete', 'add'].includes(type) ? '#fff' : 'red',
+            }
+        }
     },
     title: {
         color: '#000',
@@ -358,6 +402,12 @@ const styles = StyleSheet.create({
     },
     errorText: {
         color: 'red',
+        fontSize: 16,
+        marginBottom: 10,
+    },
+    loadingRequestText: {
+        fontSize: 16,
+        color: '#78d600',
         marginBottom: 10,
     },
 })

@@ -9,7 +9,7 @@ const { screenWidth, screenHeight } = require('../utils/dimensions');
 
 
 const Statistics = (data) => {
-    const { plant_id } = data.route.params
+    const { plant_id, plant_name } = data.route.params
 
     const defaultDataChart = {
         labels: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'],
@@ -89,7 +89,7 @@ const Statistics = (data) => {
                     <Text style={styles.errorText}>Carregando...</Text>
                 ) : !error ? (
                     <HeaderChart style={styles.header_chart}>
-                        <Text style={styles.title}>Dados:</Text>
+                        <Text style={styles.title}>Dados de {plant_name}:</Text>
 
                         <View style={styles.picker_container}>
                             <Picker
@@ -153,10 +153,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0)',
     },
     title: {
-        fontSize: 25,
+        fontSize: 23,
         color: '#2D9831',
         fontWeight: 'bold',
-        width: screenWidth * 0.35,
+        width: screenWidth * 0.45,
     },
     picker_container: {
         elevation: 5,
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden', // Garante que o borderRadius seja aplicado corretamente ao Picker
         justifyContent: 'center',
         width: screenWidth * 0.4,
-        height: screenHeight * 0.03,
+        height: screenHeight * 0.032,
     },
     picker: {
         width: '100%',

@@ -8,18 +8,20 @@ import { StyleSheet, Appearance, TextInput, Text } from 'react-native';
 const colorTextInput = Appearance.getColorScheme() === 'dark' ? '#000' : '#000'
 
 const SignUp = () => {
+    const navigation = useNavigation();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [messageUser, setMessageUser] = useState({});
     const [confirmedPassword, setConfirmedPassword] = useState('');
-    const navigation = useNavigation()
+
+    const [messageRequest, setMessageRequest] = useState(null);
 
 
     // Seta mensagem de exibição ao usuário
-    const setMessageWithTimeout = (object, timeout = 5000) => {
-        setMessageUser(object)
-        setTimeout(() => { setMessageUser({}) }, timeout)
+    const defineMessage = (message, set, time = 2500) => {
+        set(message)
+        setTimeout(() => set(''), time)
+        console.log(JSON.stringify(message))
     }
 
 
@@ -27,39 +29,38 @@ const SignUp = () => {
     const handleSignUp = async () => {
         // Validação de campos preenchidos
         if (name === '' || email === '' || password === '') {
-            setMessageWithTimeout({
+            defineMessage({
                 message: 'Preencha os campos corretamente',
                 error: true,
                 name: !name,
                 email: !email,
                 password: !password
-            })
+            }, setMessageRequest)
             return
         }
 
         // Tratativa de confirmação de senha
         if (password !== confirmedPassword) {
-            setMessageWithTimeout({
+            defineMessage({
                 message: 'As senhas não coincidem',
                 error: true,
                 password: false,
                 confirmedPassword: false
-            })
+            }, setMessageRequest)
             return
         }
 
+        setMessageRequest({ message: 'Carregando...' })
 
         await api.post('/users', { name, email, password })
             .then(res => {
-                setMessageWithTimeout({ message: res.message, error: false }) // Exibe mensage de sucesso
+                defineMessage({ message: res.message, error: false }, setMessageRequest) // Exibe mensage de sucesso
 
-                setTimeout(() => {
-                    navigation.navigate('SignIn') // Redirecionamento tela de Login
-                }, 1500)
+                // Redirecionamento tela de Login
+                setTimeout(() => navigation.navigate('SignIn'), 1500)
             })
             .catch(err => {
-                console.error(err.response.status, err.response.data.message)
-                setMessageWithTimeout({ message: err.response.data.message, error: true, email: !err.email })
+                defineMessage({ message: err?.response?.data?.message || 'Erro ao cadastrar usuário', error: true, email: !err.email }, setMessageRequest)
             })
     }
 
@@ -67,14 +68,14 @@ const SignUp = () => {
     // Validação de Senha (confirma senha digitada pelo usuário)
     const validatePassword = () => {
         if (password !== confirmedPassword) {
-            setMessageWithTimeout({
+            defineMessage({
                 message: 'As senhas não coincidem',
                 error: true,
                 password: false,
                 confirmedPassword: false
-            })
+            }, setMessageRequest)
         } else {
-            setMessageWithTimeout({})
+            defineMessage(null, setMessageRequest)
         }
     }
 
@@ -97,7 +98,7 @@ const SignUp = () => {
             </Text>
 
             <TextInput
-                style={[styles.input, messageUser.name && styles.messageUserInput(messageUser.error)]}
+                style={[styles.input, messageRequest?.name && styles.messageUserInput(messageRequest?.error)]}
                 value={name}
                 onChangeText={setName}
                 placeholder="Nome"
@@ -105,7 +106,7 @@ const SignUp = () => {
             />
 
             <TextInput
-                style={[styles.input, messageUser.email && styles.messageUserInput(messageUser.error)]}
+                style={[styles.input, messageRequest?.email && styles.messageUserInput(messageRequest?.error)]}
                 value={email}
                 onChangeText={setEmail}
                 placeholder="E-mail"
@@ -113,7 +114,7 @@ const SignUp = () => {
             />
 
             <TextInput
-                style={[styles.input, messageUser.password && styles.messageUserInput(messageUser.error)]}
+                style={[styles.input, messageRequest?.password && styles.messageUserInput(messageRequest?.error)]}
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Senha"
@@ -122,7 +123,7 @@ const SignUp = () => {
             />
 
             <TextInput
-                style={[styles.input, messageUser.confirmedPassword && styles.messageUserInput(messageUser.error)]}
+                style={[styles.input, messageRequest?.confirmedPassword && styles.messageUserInput(messageRequest?.error)]}
                 value={confirmedPassword}
                 onChangeText={setConfirmedPassword}
                 placeholder="Confirme sua Senha"
@@ -130,7 +131,7 @@ const SignUp = () => {
                 placeholderTextColor={colorTextInput}
             />
 
-            <Text style={styles.messageUserText(messageUser.error)}>{messageUser.message ? messageUser.message : ''}</Text>
+            <Text style={messageRequest?.error ? styles.errorText : styles.loadingRequestText}>{messageRequest?.message || ''}</Text>
 
             <ButtonCard style={styles.buttonCard}>
                 <Button style={styles.button} onPress={() => handleSignUp()}>
@@ -181,12 +182,17 @@ const styles = StyleSheet.create({
     messageUserInput: (type) => {
         return type ? { borderColor: 'red', } : {}
     },
-    messageUserText: (type) => {
-        return {
-            marginBottom: 10,
-            color: type ? 'red' : '#78d600',
-        }
-
+    errorText: {
+        color: 'red',
+        fontSize: 16,
+        marginBottom: 10,
+        fontWeight: 'bold',
+    },
+    loadingRequestText: {
+        fontSize: 16,
+        color: '#78d600',
+        marginBottom: 10,
+        fontWeight: 'bold',
     },
 });
 
