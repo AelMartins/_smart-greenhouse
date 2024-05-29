@@ -1,7 +1,7 @@
 const api = require('../utils/api');
 import React, { useState, useEffect } from 'react';
 import { LineChart } from 'react-native-chart-kit';
-import { Container, HeaderChart } from '../Styles';
+import { Container, Header } from '../Styles';
 import { Picker } from '@react-native-picker/picker';
 import { StyleSheet, Text, View } from 'react-native';
 const { screenWidth, screenHeight } = require('../utils/dimensions');
@@ -16,7 +16,7 @@ const Statistics = (data) => {
         datasets: [{ data: [0, 0, 0, 0, 0] }]
     }
 
-    const [error, setError] = useState(null)
+    const [message, setMessage] = useState(null)
     const [loading, setLoading] = useState(true)
     const [dataChart, setDataChart] = useState(defaultDataChart)
     const [selectedChartData, setSelectedChartData] = useState('weight')
@@ -24,6 +24,10 @@ const Statistics = (data) => {
 
     // Gatilho inicial para consultas na Api
     const fetchData = async () => {
+        // Caso já esteja sendo buscado, não iniciará outro processo
+        if (process.env.FETCHDATA_IN_PROGRESS == '1') return 'in_progress'
+
+        process.env.FETCHDATA_IN_PROGRESS = '1'
         try {
             await api.get(`/data-plants/${plant_id}`)
                 .then(res => {
@@ -33,7 +37,7 @@ const Statistics = (data) => {
                             labels: defaultDataChart.labels,
                             datasets: data.length > 0 ? [{ data }] : defaultDataChart.datasets
                         })
-                        setError(null)
+                        setMessage(null)
 
                     } else {
                         throw new Error('Nenhum dado registrado')
@@ -44,29 +48,31 @@ const Statistics = (data) => {
             if (error?.response?.status && error?.response?.status !== 404) await fetchData()
 
             const messageError = error?.response?.data?.message || error.message
-            setError(messageError)
+            setMessage(messageError)
 
         } finally {
             setLoading(false)
+            process.env.FETCHDATA_IN_PROGRESS = '0'
         }
     }
 
     useEffect(() => {
         fetchData()
-        const interval = setInterval(fetchData, 10 * 1000)
+        const interval = setInterval(fetchData, 1 * 1000)
         return () => clearInterval(interval)
     }, [selectedChartData])
 
 
     // Define tipo de Dado exibido no Gráfico
-    const handlePickerChange = (itemValue) => {
+    const handlePickerChange = async (itemValue) => {
         setSelectedChartData(itemValue)
-        setDataChart({
-            labels: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'],
-            datasets: [{ data: [0, 0, 0, 0, 0] }]
-        })
+        setLoading(true)
 
-        fetchData()
+
+        let inProgressFetchData
+        do {
+            fetchData().then(res => inProgressFetchData = res)
+        } while (inProgressFetchData == 'in_progress')
     }
 
     // Renderiza os itens do seletor de Dados
@@ -85,11 +91,11 @@ const Statistics = (data) => {
     return (
         <Container style={styles.background}>
             <Container style={styles.container}>
-                {loading ? (
-                    <Text style={styles.errorText}>Carregando...</Text>
-                ) : !error ? (
-                    <HeaderChart style={styles.header_chart}>
-                        <Text style={styles.title}>Dados de {plant_name}:</Text>
+                <Header style={styles.header}>
+                    <Text style={styles.title}>Dados de {plant_name}:</Text>
+                    {loading ? (
+                        <Text style={styles.messageText}>Carregando...</Text>
+                    ) : !message ? (
 
                         <View style={styles.picker_container}>
                             <Picker
@@ -104,10 +110,10 @@ const Statistics = (data) => {
                                 ])}
                             </Picker>
                         </View>
-                    </HeaderChart>
-                ) : (
-                    <Text style={styles.errorText}>{error}</Text>
-                )}
+                    ) : (
+                        <Text style={styles.messageText}>{message}</Text>
+                    )}
+                </Header>
 
 
                 <LineChart
@@ -144,16 +150,16 @@ const styles = StyleSheet.create({
         width: screenWidth * 0.95,
         height: screenHeight * 0.85,
     },
-    header_chart: {
+    header: {
         alignItems: 'center',
         flexDirection: 'row',
         width: screenWidth * 0.95,
-        height: screenHeight * 0.08,
+        height: screenHeight * 0.1,
         justifyContent: 'space-between',
         backgroundColor: 'rgba(0,0,0,0)',
     },
     title: {
-        fontSize: 23,
+        fontSize: 20,
         color: '#2D9831',
         fontWeight: 'bold',
         width: screenWidth * 0.45,
@@ -174,22 +180,22 @@ const styles = StyleSheet.create({
     },
     picker_item: (bg) => {
         return {
-            fontSize: 15,
+            fontSize: 14,
             fontWeight: 'bold',
             color: bg ? 'white' : '#2D9831',
             backgroundColor: bg ? bg : 'white',
         }
     },
+    messageText: {
+        fontSize: 16,
+        color: '#2D9831',
+        fontWeight: '500',
+        textAlign: 'center',
+        width: screenWidth * 0.45,
+    },
     line_chart: {
         borderRadius: 10,
         backgroundColor: 'rgba(0,0,0,0)',
-    },
-    errorText: {
-        fontSize: 22,
-        marginTop: 10,
-        color: '#2D9831',
-        marginBottom: 30,
-        fontWeight: 'bold',
     },
 });
 

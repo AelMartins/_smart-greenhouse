@@ -22,7 +22,7 @@ const ContainerChart = styled.View`
   background-color: white;
 `;
 
-const HeaderChart = styled.View`
+const Header = styled.View`
   padding: 10px;
   background-color: white;
   justify-content: center;
@@ -102,7 +102,7 @@ export {
   Container,
   ContainerImage,
   ContainerChart,
-  HeaderChart,
+  Header,
   Card,
   TextPlantName,
   ButtonCard,
