@@ -58,3 +58,5 @@ Link de protótipo: [smart-greenhouse-mobile](https://www.figma.com/proto/4HkQCk
 [ Samuel Luiz Martins dos Santos 	  | 1091392223033 ]
 
 [ Victor Hugo Moro Pires 			  | 1091392223018 ]
+
+[ José Gabriel Galvão Amorim		      | 1091392223030 ]
