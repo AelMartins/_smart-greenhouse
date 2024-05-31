@@ -102,11 +102,15 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
                         // Configuração do nome do arquivo APK
             applicationVariants.all { variant ->
-                variant.outputs.all {
-                    outputFileName = "smart-greenhouse.apk"
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        def date = new Date().format("dd-MM-yyyy")  // Formato de data: YYYYMMDD
+                        def fileName = "SmartGreenHouse-${date}-${variant.name}.apk"
+                        output.outputFileName = fileName
+                    }
                 }
             }
-
         }
     }
 }
