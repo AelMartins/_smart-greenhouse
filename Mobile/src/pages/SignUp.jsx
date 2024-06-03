@@ -39,13 +39,14 @@ const SignUp = () => {
             return
         }
 
+        const passwordValidated = validatePassword()
+
         // Tratativa de confirmação de senha
-        if (password !== confirmedPassword) {
+        if (!passwordValidated.valid) {
             defineMessage({
-                message: 'As senhas não coincidem',
+                message: 'Senha inválida. Preencha os requisitos',
                 error: true,
                 password: false,
-                confirmedPassword: false
             }, setMessageRequest)
             return
         }
@@ -67,6 +68,18 @@ const SignUp = () => {
 
     // Validação de Senha (confirma senha digitada pelo usuário)
     const validatePassword = () => {
+        const result = { 
+            valid: false,
+            passwordsMatch: false,
+            resume: {
+                hasLowerCase: /[a-z]/.test(password),
+                hasUpperCase: /[A-Z]/.test(password),
+                hasNumber: /\d/.test(password),
+                hasSpecialChar: /[@$!%*?&]/.test(password),
+                hasMinLength: password.length >= 6,
+            },
+        }
+        
         if (password !== confirmedPassword) {
             defineMessage({
                 message: 'As senhas não coincidem',
@@ -74,20 +87,24 @@ const SignUp = () => {
                 password: false,
                 confirmedPassword: false
             }, setMessageRequest)
+            
         } else {
             defineMessage(null, setMessageRequest)
+            result.passwordsMatch = true
         }
+
+        result.valid = Object.values(result.resume).every(value => value === true) && result.passwordsMatch === true
+        return result
     }
 
 
-    // Verificação de senha e confirmação
+    // Verificação de requisitos de senha e senhas compatíveis
     useEffect(() => {
         if (confirmedPassword !== '') {
             const timer = setTimeout(validatePassword, 500)
             return () => clearTimeout(timer)
         }
-
-    }, [confirmedPassword])
+    }, [password, confirmedPassword])
 
 
     return (
