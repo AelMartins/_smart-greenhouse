@@ -1,0 +1,1 @@
+https://www.tinkercad.com/things/hnjr3BZHMNX-sensores-pi?sharecode=wQxRZTj_3Ax0QL8Z1QjVxrqPdnxXs-nKy0ILVEQ48lM
