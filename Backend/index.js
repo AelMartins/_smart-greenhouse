@@ -11,26 +11,26 @@ const { server, plugins } = require("./server");
 
 function generateDataToPlants() {
     const cron = require('node-cron')
-    const plants = require('./src/plants/plants-repository')
-    const dataPlants = require('./src/data_plants/data-plants-repository')
+    const Simulator = require('./helper/DataSimulator')
+    const { findAll: findAllPlants } = require('./src/plants/plants-repository')
+    const { findLastData } = require('./src/data_plants/data-plants-repository')
 
     cron.schedule('* * * * *', async () => {
-        const allPlants = await plants.findAll({ select: { id: true, name: true, data_plants: true } })
+        const allPlants = await findAllPlants({ select: { id: true, name: true, data_plants: true } })
 
-        const genRandom = () => {
-            return Math.floor(Math.random() * 101);
-        }
-
+        // Itera sobre cada planta para inserir novo registro
         allPlants.forEach(async plant => {
-            if (plant.data_plants.length < 25) {
-                const object = {
-                    plant_id: plant.id,
-                    illumination: genRandom(),
-                    celsius: genRandom(),
-                    humidity: genRandom(),
-                    weight: genRandom() * 10
-                }
-                await dataPlants.create(object)
+            if (plant.data_plants.length < 100) {
+
+
+                // Busca últimos registros da planta para inserir novos com base nas últimas datas
+                await findLastData({
+                    where: { plant_id: plant.id },
+                    orderBy: { created_at: 'desc' }
+
+                }).then(res => {
+                    new Simulator(plant.id, res)
+                })
             }
         })
     })

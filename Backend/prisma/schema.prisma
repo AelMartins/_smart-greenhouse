@@ -31,10 +31,10 @@ model data_plants {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   plant        plants?  @relation(fields: [plant_id], references: [id])
   plant_id     String?  @db.ObjectId
-  illumination Int
-  celsius      Int
-  humidity     Int
-  weight       Float
+  illumination Int?
+  celsius      Float?
+  humidity     Int?
+  weight       Float?
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 }

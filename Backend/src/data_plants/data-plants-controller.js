@@ -29,7 +29,18 @@ const findAll = async (request, h) => {
 const findLastData = async (request, h) => {
     try {
         const result = await business.findLastData(request.params.plant_id)
-        return h.response({ message: result ? 'Último dados encontrado' : 'Nenhum dado encontrado', result })
+        return h.response({ message: 'Últimos dados encontrado', result })
+
+    } catch (error) {
+        return responseError(h, error)
+    }
+}
+
+const findDataByField = async (request, h) => {
+    try {
+        const result = await business.findDataByField(request.query)
+        const message = result.length === 0 ? 'Nenhum dado encontrado' : 'Dados encontrados com sucesso!'
+        return h.response({ totalCount: result.length, message, result })
 
     } catch (error) {
         return responseError(h, error)
@@ -60,6 +71,7 @@ module.exports = {
     findAllByPlant,
     findAll,
     findLastData,
+    findDataByField,
     create,
     destroy,
 }

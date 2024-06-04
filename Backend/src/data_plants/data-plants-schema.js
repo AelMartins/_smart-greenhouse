@@ -53,6 +53,18 @@ const findLastData = {
     })
 }
 
+const findDataByField = {
+    query: Joi.object({
+        plant_id: Joi
+            .objectId()
+            .required(),
+        data_field: Joi
+            .string()
+            .valid('illumination', 'celsius', 'humidity', 'weight')
+            .default('illumination'),
+    })
+}
+
 const create = {
     payload: Joi.object({
         plant_id: Joi
@@ -60,19 +72,15 @@ const create = {
             .required(),
         illumination: Joi
             .number()
-            .integer()
-            .required(),
+            .integer(),
         celsius: Joi
             .number()
-            .integer()
-            .required(),
+            .integer(),
         humidity: Joi
             .number()
-            .integer()
-            .required(),
+            .integer(),
         weight: Joi
-            .number()
-            .required(),
+            .number(),
     })
 }
 
@@ -88,6 +96,7 @@ module.exports = {
     findAllByPlant,
     findAll,
     findLastData,
+    findDataByField,
     create,
     destroy
 }

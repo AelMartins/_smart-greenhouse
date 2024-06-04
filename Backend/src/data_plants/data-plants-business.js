@@ -32,6 +32,17 @@ const findLastData = async (plant_id) => {
     return await repository.findLastData(options)
 }
 
+const findDataByField = async (query) => {
+    const { plant_id, data_field } = query
+    const options = {
+        where: { plant_id },
+        orderBy: { created_at: 'desc' }
+    }
+    Object.defineProperty(options.where, data_field, { value: { not: null } })
+
+    return await repository.findDataByField(options, data_field)
+}
+
 const create = async (payload) => {
     return await repository.create(payload)
 }
@@ -44,6 +55,7 @@ module.exports = {
     findAllByPlant,
     findAll,
     findLastData,
+    findDataByField,
     create,
     destroy
 }
