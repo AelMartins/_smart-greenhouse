@@ -39,12 +39,12 @@ const SignUp = () => {
             return
         }
 
-        const passwordValidated = validatePassword()
 
         // Tratativa de confirmação de senha
+        const passwordValidated = validatePassword()
         if (!passwordValidated.valid) {
             defineMessage({
-                message: 'Senha inválida. Preencha os requisitos',
+                message: passwordValidated.message,
                 error: true,
                 password: false,
             }, setMessageRequest)
@@ -55,7 +55,7 @@ const SignUp = () => {
 
         await api.post('/users', { name, email, password })
             .then(res => {
-                defineMessage({ message: res.message, error: false }, setMessageRequest) // Exibe mensage de sucesso
+                defineMessage({ message: res.message, error: false }, setMessageRequest, 4000) // Exibe mensage de sucesso
 
                 // Redirecionamento tela de Login
                 setTimeout(() => navigation.navigate('SignIn'), 1500)
@@ -68,18 +68,10 @@ const SignUp = () => {
 
     // Validação de Senha (confirma senha digitada pelo usuário)
     const validatePassword = () => {
-        const result = { 
-            valid: false,
-            passwordsMatch: false,
-            resume: {
-                hasLowerCase: /[a-z]/.test(password),
-                hasUpperCase: /[A-Z]/.test(password),
-                hasNumber: /\d/.test(password),
-                hasSpecialChar: /[@$!%*?&]/.test(password),
-                hasMinLength: password.length >= 6,
-            },
+        let result = {
+            valid: false
         }
-        
+
         if (password !== confirmedPassword) {
             defineMessage({
                 message: 'As senhas não coincidem',
@@ -87,13 +79,13 @@ const SignUp = () => {
                 password: false,
                 confirmedPassword: false
             }, setMessageRequest)
-            
+            result.message = 'As senhas não coincidem'
+
         } else {
             defineMessage(null, setMessageRequest)
-            result.passwordsMatch = true
+            result.valid = true
         }
 
-        result.valid = Object.values(result.resume).every(value => value === true) && result.passwordsMatch === true
         return result
     }
 
@@ -104,7 +96,7 @@ const SignUp = () => {
             const timer = setTimeout(validatePassword, 500)
             return () => clearTimeout(timer)
         }
-    }, [password, confirmedPassword])
+    }, [confirmedPassword])
 
 
     return (

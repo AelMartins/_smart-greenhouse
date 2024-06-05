@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const config = {
-    baseURL: 'https://tvd5gd-4000.csb.app',
+    baseURL: 'https://p29ply-4000.csb.app',
     headers: {
         'Content-Type': 'application/json'
     }
