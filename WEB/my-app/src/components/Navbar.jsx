@@ -25,8 +25,7 @@ const Content = styled('div')({
 
 const menuItems = [
   { title: 'Home', route: '/' },
-  { title: 'Sobre', route: '/sobre' }, // Corrigido o título do menu
-  { title: 'Contato', route: '/contato' }, // Corrigido o título do menu
+  { title: 'Minhas Plantas', route: '/sobre' }, //alterar a rota para a planta 
 ];
 
 const Navbar = () => {

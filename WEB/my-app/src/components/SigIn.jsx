@@ -4,6 +4,8 @@ import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../images/background.jpg';
 
+const api = require('../utils/api');
+
 const ImageBackground = styled('div')({
   backgroundImage: `url(${backgroundImage})`,
   backgroundSize: 'cover',
@@ -12,7 +14,7 @@ const ImageBackground = styled('div')({
   justifyContent: 'center',
   alignItems: 'center',
   minHeight: '100vh',
-  padding: '20px', // padding to avoid elements touching screen edges on mobile
+  padding: '20px', 
 });
 
 const CustomContainer = styled(Container)(({ theme }) => ({
@@ -85,16 +87,21 @@ const SignIn = () => {
     setMessageRequest({ msg: 'Carregando...' });
 
     // Simulando uma requisição de API
-    setTimeout(() => {
-      defineMessage({ msg: 'Login realizado com sucesso' }, setMessageRequest, 1500);
-      navigate('/home');
-      setEmail('');
-      setPassword('');
-    }, 1500);
-  };
+    try {
 
-  const handleSignUp = () => {
-    navigate('/signup');
+      await api.post(`/users/login`, { email, password })
+     .then(async res => {
+         defineMessage({ msg: `Login realizado com sucesso` }, setMessageRequest, 1500)
+
+         // Adiciona dados do usuário a sessão
+         navigation.navigate('Home', res)
+         setEmail('')
+         setPassword('')
+
+     })
+   } catch (error) {
+     console.log(error);
+   }
   };
 
   return (

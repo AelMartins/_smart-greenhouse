@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+const api = require('../utils/api');
 
 const SignUp = () => {
     const [name, setName] = useState('');
@@ -36,14 +37,27 @@ const SignUp = () => {
             return
         }
 
-        setMessageRequest({ message: 'Carregando...' })
+        setMessageRequest({ message: 'Carregando...' });
 
         // Simulando a requisição para evitar erro
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        try {
 
-        defineMessage({ message: 'Usuário cadastrado com sucesso!', error: false }, setMessageRequest)
+            await api.post(`/users/login`, { name ,email, passwordValidated })
+           .then(async res => {
+               defineMessage({ msg: `Cadastro realizado com sucesso` }, setMessageRequest, 1500);
+      
+               // Adiciona dados do usuário a sessão
+               navigation.navigate('SignIn', res);
+               setName('');
+               setEmail('');
+               setPassword('');
+      
+           })
+         } catch (error) {
+           console.log(error);
+         }
 
-        // setTimeout(() => navigation.navigate('SignIn'), 1500) // Não há navegação no React, precisa ser tratado de outra forma
+            // Não há navegação no React, precisa ser tratado de outra forma, routers elinks
     }
 
     const validatePassword = () => {
