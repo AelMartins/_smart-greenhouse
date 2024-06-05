@@ -20,9 +20,7 @@ function generateDataToPlants() {
 
         // Itera sobre cada planta para inserir novo registro
         allPlants.forEach(async plant => {
-            if (plant.data_plants.length < 100) {
-
-
+            if (plant.data_plants.length < 50) {
                 // Busca últimos registros da planta para inserir novos com base nas últimas datas
                 await findLastData({
                     where: { plant_id: plant.id },

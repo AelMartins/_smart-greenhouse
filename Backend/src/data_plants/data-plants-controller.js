@@ -36,9 +36,9 @@ const findLastData = async (request, h) => {
     }
 }
 
-const findDataByField = async (request, h) => {
+const findTypeDataToChart = async (request, h) => {
     try {
-        const result = await business.findDataByField(request.query)
+        const result = await business.findTypeDataToChart(request.params.type_data, request.query.plant_id)
         const message = result.length === 0 ? 'Nenhum dado encontrado' : 'Dados encontrados com sucesso!'
         return h.response({ totalCount: result.length, message, result })
 
@@ -71,7 +71,7 @@ module.exports = {
     findAllByPlant,
     findAll,
     findLastData,
-    findDataByField,
+    findTypeDataToChart,
     create,
     destroy,
 }

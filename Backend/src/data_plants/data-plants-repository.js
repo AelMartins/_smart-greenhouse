@@ -1,4 +1,5 @@
 const prisma = require('../../prisma')
+const { eachDayOfInterval, format } = require('date-fns');
 
 
 const findById = async (id) => {
@@ -74,11 +75,6 @@ const findLastData = async (options) => {
             delete optByField.select[field]
         }
 
-
-
-        // const result = await prisma.data_plants.findFirst(options)
-        // if (!result) throw Object.assign(new Error('Nenhum dado encontrado'), { statusCode: 404 })
-
         return result
 
     } catch (err) {
@@ -86,14 +82,56 @@ const findLastData = async (options) => {
     }
 }
 
-const findDataByField = async (options, field) => {
+const findTypeDataToChart = async (options, type_data) => {
     try {
-        const result = await prisma.data_plants.findMany(options)
-            .then(async res => {
-                return await Promise.all(res.map(item => item[field]).filter(item => !!item))
-            })
+        let results = await prisma.data_plants.findMany(options)
+        results = results.map(item => {
+            if (item[type_data]) return item
+        }).filter(item => item !== undefined)
 
-        return result
+        // Filtra e mapeia os dados relevantes
+        const data = results.map(item => item[type_data])
+
+        if (data.length === 0) {
+            return { result: { labels: [], data: [] } };
+        }
+
+
+        // Pega as datas de criação dos registros
+        const dates = results.map(item => item.created_at);
+
+        // Determina o intervalo de tempo dos registros
+        const startDate = new Date(Math.min(...dates.map(date => new Date(date))));
+        const endDate = new Date(Math.max(...dates.map(date => new Date(date))));
+
+        // Cria um intervalo de dias entre a data inicial e final
+        const interval = eachDayOfInterval({ start: startDate, end: endDate });
+
+        // Formata as datas para obter os dias da semana
+        const labels = interval.map(date => {
+            const mapDays = {
+                'Sun': 'Dom',
+                'Mon': 'Seg',
+                'Tue': 'Ter',
+                'Wed': 'Qua',
+                'Thu': 'Qui',
+                'Fri': 'Sex',
+                'Sat': 'Sáb',
+            }
+
+            // Traduz o nome dos dias
+            return mapDays[format(date, 'eee')]
+        });
+
+
+
+        return {
+            result: {
+                labels: Array.from(new Set(labels)), // Remove duplicatas das labels
+                data,
+            }
+        };
+
 
     } catch (err) {
         throw err
@@ -126,7 +164,7 @@ const destroy = async (id) => {
 module.exports = {
     findAll,
     findLastData,
-    findDataByField,
+    findTypeDataToChart,
     create,
     destroy
 }

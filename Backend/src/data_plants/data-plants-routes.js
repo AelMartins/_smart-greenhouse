@@ -1,5 +1,5 @@
 const schema = require('./data-plants-schema')
-const { findAllByPlant, findAll, findLastData, findDataByField, create, destroy } = require('./data-plants-controller')
+const { findAllByPlant, findAll, findLastData, findTypeDataToChart, create, destroy } = require('./data-plants-controller')
 
 const plugin = {
     name: 'data-plants-route',
@@ -32,10 +32,10 @@ const plugin = {
             },
             {
                 method: 'GET',
-                path: '/data-plants/by-field',
+                path: '/data-plants/chart/{type_data}',
                 options: {
-                    handler: findDataByField,
-                    validate: schema.findDataByField
+                    handler: findTypeDataToChart,
+                    validate: schema.findTypeDataToChart
                 }
             },
             {

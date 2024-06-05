@@ -4,18 +4,42 @@ const { create } = require('../src/data_plants/data-plants-repository')
 class DataSimulator {
     constructor(plant_id, data) {
         this.PlantId = plant_id
-        const { illumination, celsius, humidity, weight } = data
-
-        console.log('\n=============================================================')
-        // this.generateIllumination(illumination)
-        this.generateTemperature(celsius)
-        // this.generateHumidity(humidity)
-        // this.generateWeight(weight)
-        console.log('=============================================================\n')
+        this.generateData(data)
     }
 
     async createData(object) {
         await create(object)
+    }
+
+    async generateData(lastData) {
+        const [othersData, celsius] = await Promise.all([
+            // this.generateIllumination(lastData.illumination),
+            this.othersData(),
+            this.generateTemperature(lastData.celsius)
+            // this.generateHumidity(lastData.humidity),
+            // this.generateWeight(lastData.weight),
+        ])
+
+        console.log('\n=============================================================')
+        console.log(`Dados gerados: ${JSON.stringify({ ...othersData, celsius })}`)
+        console.log('=============================================================')
+
+    }
+
+    async othersData() {
+        const genRandom = () => {
+            return Math.floor(Math.random() * 101);
+        }
+
+        const object = {
+            plant_id: this.PlantId,
+            illumination: genRandom(),
+            humidity: genRandom(),
+            weight: genRandom() * 10
+        }
+        await this.createData(object)
+
+        return object
     }
 
     /**
@@ -52,20 +76,17 @@ class DataSimulator {
         // Temperatura esta dentro dos limites brasileiros
         if (finalTemp < 15) finalTemp = 15;
         if (finalTemp > 40) finalTemp = 40;
-        finalTemp = finalTemp.toFixed(1)
+        finalTemp = parseFloat(finalTemp.toFixed(1))
 
 
-        const result = await this.createData({
+        await this.createData({
             plant_id: this.PlantId,
-            celsius: parseFloat(finalTemp),
+            celsius: finalTemp,
             created_at: nextHour,
             updated_at: nextHour,
         })
 
-        if (this.PlantId == '665e994558cd1309d646fecd') {
-            console.log(`Temperatura ID.${this.PlantId}: ${parseFloat(finalTemp)}ºC // Variação de Tempo: ${1}h`)
-        }
-        return result
+        return finalTemp
     }
 }
 

@@ -53,15 +53,17 @@ const findLastData = {
     })
 }
 
-const findDataByField = {
+const findTypeDataToChart = {
+    params: Joi.object({
+        type_data: Joi
+            .string()
+            .valid('illumination', 'celsius', 'humidity', 'weight')
+            .default('illumination'),
+    }),
     query: Joi.object({
         plant_id: Joi
             .objectId()
             .required(),
-        data_field: Joi
-            .string()
-            .valid('illumination', 'celsius', 'humidity', 'weight')
-            .default('illumination'),
     })
 }
 
@@ -96,7 +98,7 @@ module.exports = {
     findAllByPlant,
     findAll,
     findLastData,
-    findDataByField,
+    findTypeDataToChart,
     create,
     destroy
 }
