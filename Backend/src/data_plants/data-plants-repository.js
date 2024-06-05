@@ -126,12 +126,9 @@ const findTypeDataToChart = async (options, type_data) => {
 
 
         return {
-            result: {
-                labels: Array.from(new Set(labels)), // Remove duplicatas das labels
-                data,
-            }
+            labels: Array.from(new Set(labels)), // Remove duplicatas das labels
+            data,
         };
-
 
     } catch (err) {
         throw err
