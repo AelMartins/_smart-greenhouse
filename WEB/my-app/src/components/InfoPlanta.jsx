@@ -1,4 +1,5 @@
 import './InfoPlanta.css';
+import DataPlant from './DataPlant';
 
 
 
@@ -12,7 +13,7 @@ function InfoPlanta() {
             <p className="textoTeste">GRAFICO AQUI Ó</p>
           </div>
           <div className="infoPlanta">
-            <p className="textoTeste">INFOPLANTA AQUI Ó</p>
+              <DataPlant />
           </div>
         </div>
       </div>

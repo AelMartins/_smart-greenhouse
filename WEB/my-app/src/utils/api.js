@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from "axios"
 
 const config = {
     baseURL: 'https://p29ply-4000.csb.app',
@@ -24,4 +24,4 @@ const destroy = async (path) => {
     return await axios.delete(`${config.baseURL}${path}`).then(res => res.data)
 }
 
-module.exports = { get, post, put, destroy }
+export { get, post, put, destroy }

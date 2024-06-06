@@ -1,68 +1,58 @@
-.background {
-    width: 100vw;
-    height: 100vh;
-    background-color: #fff;
-  }
-  
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 95%;
-    background-color: #2D9831;
-    border-radius: 20px;
-    padding: 20px;
-  }
-  
-  .plant-name {
-    font-size: 24px;
-    color: #fff;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .stats-container {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-  }
-  
-  .stat-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .label-text {
-    font-size: 16px;
-    color: #fff;
-    font-weight: bold;
-    margin-top: 10px;
-  }
-  
-  .stats-button {
-    margin: 25px;
-    border-radius: 10px;
-    padding: 10px 20px;
-    background-color: #ffffff;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  .stats-button:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .plant, .ligthning, .thermometer, .sensor {
-    height: 100px; /* Adjust the height as needed */
-  }
-  
-  .error-text {
-    color: #fff;
-    font-size: 20px;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-  
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #173f27; /* Fundo verde escuro */
+  color: #fff; /* Texto branco */
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.panel {
+  display: flex;
+  align-items: center;
+  background-color: #285f3c; /* Fundo verde escuro mais intenso */
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.imageContainer {
+  margin-right: 20px;
+}
+
+.plantImage {
+  width: 100px;
+  height: 100px;
+}
+
+.infoContainer {
+  flex: 1;
+}
+
+.dataPlant {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px; /* Aumentado o espaço entre os itens */
+}
+
+.dataPlant img {
+  margin-right: 20px; /* Aumentado o espaço entre a imagem e o texto */
+  width: 24px;
+  height: 24px;
+}
+
+.label_text_style {
+  font-size: 16px;
+  color: #fff; /* Texto branco */
+}
+
+.errorText {
+  font-size: 16px;
+  color: red;
+}

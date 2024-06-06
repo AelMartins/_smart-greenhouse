@@ -1,58 +1,73 @@
-.background {
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
 }
 
 .container {
-    background-color: #eee;
-    width: 95%;
-    margin: auto;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.content {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navibar {
     display: flex;
     justify-content: space-between;
-    padding: 20px;
-    background-color: white;
-}
-
-.button-navibar {
-    border-radius: 15px;
-    background-color: #78d600;
-    color: white;
-    padding: 10px 20px;
-}
-
-.list-plants {
-    margin-top: 20px;
-}
-
-.plant-card {
-    margin: 5px;
-    padding: 15px;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-}
-
-.text-style {
-    font-size: 14px;
-    color: #000;
-    font-weight: bold;
-    text-align: center;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .title {
-    font-size: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
 }
 
-.loading, .no-plants {
-    font-size: 18px;
-    color: #777;
-    margin-top: 25px;
-    text-align: center;
+.button-navibar {
+    background-color: #78d600;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-navibar:hover {
+    background-color: #5c9e00;
+}
+
+.list-plants {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.text-style {
+    font-size: 16px;
+    color: #333;
+    margin: 0;
 }
 
 .modal {
@@ -68,63 +83,48 @@
 }
 
 .modal-content {
-    background-color: white;
-    padding: 35px;
-    border-radius: 20px;
-    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .modal-text {
-    font-size: 16px;
-    color: #000;
+    font-size: 18px;
+    color: #333;
     margin-bottom: 15px;
 }
 
 .modal-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
 }
 
 .button {
     padding: 10px 20px;
-    border-radius: 20px;
-    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.cancel {
-    background-color: #fff;
-    color: red;
-    border: 2px solid red;
+.button.cancel {
+    background-color: #f44336;
+    color: #fff;
+    margin-right: 10px;
 }
 
-.delete {
-    background-color: red;
-    color: white;
+.button.delete {
+    background-color: #f44336;
+    color: #fff;
 }
 
-.add {
+.button.add {
     background-color: #78d600;
-    color: white;
+    color: #fff;
 }
 
-.text-input {
-    border: 3px solid rgba(0, 0, 0, 0.2);
-    background-color: #ddd;
-    padding: 10px;
-    width: 60%;
-    margin-bottom: 10px;
-}
-
-.error-input {
-    border-color: red;
-}
-
-.error-text {
-    color: red;
-    font-size: 16px;
-}
-
-.loading-request-text {
-    font-size: 16px;
-    color: #78d600;
+.button:hover {
+    background-color: #333;
+    color: #fff;
 }

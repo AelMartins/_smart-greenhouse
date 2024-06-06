@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import lightningImage from '../images/home_page/ligthning.png'; // Importa a imagem diretamente
+import plantImage from '../images/home_page/plant.png'; // Importa a imagem diretamente
+import sensorImage from '../images/home_page/sensor.png'; // Importa a imagem diretamente
+import thermometerImage from '../images/home_page/thermometer.png'; // Importa a imagem diretamente
+import './DataPlant.css';
+
 
 const DataPlant = (props) => {
+    console.log(props)
     const [dataPlant, setDataPlant] = useState({});
     const [error, setError] = useState(null);
     const { plant_id, plant_name } = props.route?.params || {};
@@ -50,26 +57,34 @@ const DataPlant = (props) => {
     return (
         <div className="container">
             <h1>{plant_name}</h1>
-            <div className="dataPlant">
-                <img src="../images/home_page/ligthning.png" alt="Lightning" />
-                <p className="label_text_style">{dataPlant.illumination}</p>
-            </div>
-            <div className="dataPlant">
-                <img src="../images/home_page/plant.png" alt="Plant" />
-                {error ? (
-                    <p className="errorText">{error}</p>
-                ) : (
-                    <p className="label_text_style">{dataPlant.weight}</p>
-                )}
-            </div>
-            <div className="dataPlant">
-                <div>
-                    <img src="../images/home_page/thermometer.png" alt="Thermometer" />
-                    <p className="label_text_style">{dataPlant.celsius}</p>
+            <div className="panel">
+                <div className="imageContainer">
+                    <img src={plantImage} alt="Plant" className="plantImage" />
                 </div>
-                <div>
-                    <img src="../images/home_page/sensor.png" alt="Sensor" />
-                    <p className="label_text_style">{dataPlant.humidity}</p>
+                <div className="infoContainer">
+                    <div className="dataPlant">
+                        <img src={lightningImage} alt="Lightning" />
+                        <p className="label_text_style">{dataPlant.illumination}</p>
+                    </div>
+                    <div className="dataPlant">
+                        <img src={thermometerImage} alt="Thermometer" />
+                        <p className="label_text_style">{dataPlant.celsius}</p>
+                    </div>
+                    <div className="dataPlant">
+                        <img src={sensorImage} alt="Sensor" />
+                        {error ? (
+                            <p className="errorText">{error}</p>
+                        ) : (
+                            <p className="label_text_style">{dataPlant.humidity}</p>
+                        )}
+                    </div>
+                    <div className="dataPlant">
+                        {error ? (
+                            <p className="errorText">{error}</p>
+                        ) : (
+                            <p className="label_text_style">{dataPlant.weight}</p>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

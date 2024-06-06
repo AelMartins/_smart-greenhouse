@@ -3,7 +3,8 @@ import { Container, TextField, Button, Typography, Card, CardContent } from '@mu
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../images/background.jpg';
-import api from '../utils/api';
+import { useUser } from '../userContext';
+import '../utils/api';
 
 const api = require('../utils/api');
 
@@ -72,6 +73,7 @@ const SignIn = () => {
   const [email, setEmail] = useState('');
   const [messageRequest, setMessageRequest] = useState(null);
   const [password, setPassword] = useState('');
+  const { setUser } = useUser();
 
   const defineMessage = (message, set, time = 2500) => {
     set(message);
@@ -87,13 +89,14 @@ const SignIn = () => {
 
     setMessageRequest({ msg: 'Carregando...' })
 
-<<<<<<< HEAD:WEB/my-app/src/components/SignIn.jsx
     await api.post(`/users/login`, { email, password })
         .then(async res => {
             defineMessage({ msg: `Login realizado com sucesso` }, setMessageRequest, 1500)
 
             // Adiciona dados do usuário a sessão
-            navigate('/HomUser', res)
+            console.log('resposta: ', res);
+            setUser(res);
+            navigate('/HomeUser');
             setEmail('')
             setPassword('')
 
@@ -103,24 +106,6 @@ const SignIn = () => {
 
   const handleSignUp = () => {
     navigate('/signUp');
-=======
-    // Simulando uma requisição de API
-    try {
-
-      await api.post(`/users/login`, { email, password })
-     .then(async res => {
-         defineMessage({ msg: `Login realizado com sucesso` }, setMessageRequest, 1500)
-
-         // Adiciona dados do usuário a sessão
-         navigation.navigate('Home', res)
-         setEmail('')
-         setPassword('')
-
-     })
-   } catch (error) {
-     console.log(error);
-   }
->>>>>>> 0d909410a267df4c5cbfb4ff07e9a94c3c67775d:WEB/my-app/src/components/SigIn.jsx
   };
 
   return (
