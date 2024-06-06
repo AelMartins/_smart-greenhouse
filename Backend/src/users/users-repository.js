@@ -25,7 +25,17 @@ const findById = async (id) => {
 
 const findAll = async (options) => {
     try {
-        const result = await prisma.users.findMany(options)
+        const result = await prisma.users.findMany({
+            ...options,
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                password: false,
+                created_at: true,
+                updated_at: true,
+            }
+        })
         return result
 
     } catch (err) {
@@ -62,7 +72,7 @@ const create = async (payload) => {
                 id: true,
                 name: true,
                 email: true,
-                password: true,
+                password: false,
                 created_at: true,
                 updated_at: true
             }

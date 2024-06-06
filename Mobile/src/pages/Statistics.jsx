@@ -29,13 +29,13 @@ const Statistics = (data) => {
 
         process.env.FETCHDATA_IN_PROGRESS = '1'
         try {
-            await api.get(`/data-plants/${plant_id}`)
+            await api.get(`/data-plants/chart/${selectedChartData}?plant_id=${plant_id}`)
                 .then(res => {
-                    if (res.result.length > 0) {
-                        const data = res.result.map(item => item[selectedChartData])
+
+                    if (res.result.data.length > 0) {
                         setDataChart({
-                            labels: defaultDataChart.labels,
-                            datasets: data.length > 0 ? [{ data }] : defaultDataChart.datasets
+                            labels: res.result.labels || defaultDataChart.labels,
+                            datasets: res.result.data.length > 0 ? [{ data: res.result.data }] : defaultDataChart.datasets
                         })
                         setMessage(null)
 
@@ -58,7 +58,7 @@ const Statistics = (data) => {
 
     useEffect(() => {
         fetchData()
-        const interval = setInterval(fetchData, 1 * 1000)
+        const interval = setInterval(fetchData, 10 * 1000)
         return () => clearInterval(interval)
     }, [selectedChartData])
 
@@ -104,8 +104,8 @@ const Statistics = (data) => {
                                 onValueChange={handlePickerChange}>
                                 {renderPickerItems([
                                     { label: 'Peso', value: 'weight' },
-                                    { label: 'Iluminação', value: 'illumination' },
                                     { label: 'Umidade', value: 'humidity' },
+                                    { label: 'Iluminação', value: 'illumination' },
                                     { label: 'Temperatura', value: 'celsius' },
                                 ])}
                             </Picker>

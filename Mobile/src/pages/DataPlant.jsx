@@ -21,31 +21,40 @@ const DataPlant = (data) => {
                 .then(res => {
                     let { weight, illumination, celsius, humidity } = res.result
 
-                    // Validação da escala de Peso
-                    if (weight < 1000) {
-                        weight = `${weight} g`;
+                    // Se todos os dados são Nulos
+                    if (Object.values(res.result).every(key => key === null)) {
+                        throw new Error('Nenhum dado encontrado')
+
                     } else {
-                        const weightInKg = (weight / 1000).toFixed(2);
-                        weight = `${weightInKg} kg`;
-                    }
+                        // Validação da escala de Peso
+                        if (weight?.value < 1000) {
+                            weight = weight?.value ? `${weight?.value} g` : '';
+                        } else {
+                            const weightInKg = ((weight?.value || 0) / 1000).toFixed(2);
+                            weight = weight?.value ? `${weightInKg} kg` : '';
+                        }
 
-                    const result = {
-                        weight,
-                        illumination: `${illumination}%`,
-                        celsius: `${celsius}ºC`,
-                        humidity: `${humidity}% MC`
-                    }
+                        const result = {
+                            weight,
+                            celsius: celsius?.value ? `${celsius?.value}ºC` : '',
+                            humidity: humidity?.value ? `${humidity?.value}% MC` : '',
+                            illumination: illumination?.value ? `${illumination?.value}%` : '',
+                        }
 
-                    setDataPlant(result)
-                    setError(null)
+                        setDataPlant(result)
+                        setError(null)
+                    }
                 })
 
         } catch (error) {
-            const responseError = error?.response?.data?.message
-            if (error?.response?.status !== 404) await fetchData()
+            const responseError = error?.response?.data?.message || error?.message
+            if (error?.response?.status !== undefined && error?.response?.status !== 404) {
+                await new Promise(resolve => setTimeout(resolve, 100))
+                fetchData()
+            }
 
             setError(responseError)
-            console.error(responseError || error.message)
+            console.error(responseError)
         }
     }
 

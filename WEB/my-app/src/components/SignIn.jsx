@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../images/background.jpg';
 import api from '../utils/api';
 
+const api = require('../utils/api');
+
 const ImageBackground = styled('div')({
   backgroundImage: `url(${backgroundImage})`,
   backgroundSize: 'cover',
@@ -13,7 +15,7 @@ const ImageBackground = styled('div')({
   justifyContent: 'center',
   alignItems: 'center',
   minHeight: '100vh',
-  padding: '20px', // padding to avoid elements touching screen edges on mobile
+  padding: '20px', 
 });
 
 const CustomContainer = styled(Container)(({ theme }) => ({
@@ -85,6 +87,7 @@ const SignIn = () => {
 
     setMessageRequest({ msg: 'Carregando...' })
 
+<<<<<<< HEAD:WEB/my-app/src/components/SignIn.jsx
     await api.post(`/users/login`, { email, password })
         .then(async res => {
             defineMessage({ msg: `Login realizado com sucesso` }, setMessageRequest, 1500)
@@ -100,6 +103,24 @@ const SignIn = () => {
 
   const handleSignUp = () => {
     navigate('/signUp');
+=======
+    // Simulando uma requisição de API
+    try {
+
+      await api.post(`/users/login`, { email, password })
+     .then(async res => {
+         defineMessage({ msg: `Login realizado com sucesso` }, setMessageRequest, 1500)
+
+         // Adiciona dados do usuário a sessão
+         navigation.navigate('Home', res)
+         setEmail('')
+         setPassword('')
+
+     })
+   } catch (error) {
+     console.log(error);
+   }
+>>>>>>> 0d909410a267df4c5cbfb4ff07e9a94c3c67775d:WEB/my-app/src/components/SigIn.jsx
   };
 
   return (

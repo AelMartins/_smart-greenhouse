@@ -40,19 +40,28 @@ const SignUp = () => {
             }, setMessageRequest)
             return
         }
-        
-        setMessageRequest({ message: 'Carregando...' })
-        
-        await api.post('/users', { name, email, password })
-        .then(res => {
-            defineMessage({ message: res.message, error: false }, setMessageRequest) // Exibe mensage de sucesso
-            
-            // Redirecionamento tela de Login
-            setTimeout(() => navigate('/SignIn'), 1500)
-        })
-        .catch(err => {
-            defineMessage({ message: err?.response?.data?.message || 'Erro ao cadastrar usuário', error: true, email: !err.email }, setMessageRequest)
-        })
+
+        setMessageRequest({ message: 'Carregando...' });
+
+        // Simulando a requisição para evitar erro
+        try {
+
+            await api.post(`/users/login`, { name ,email, passwordValidated })
+           .then(async res => {
+               defineMessage({ msg: `Cadastro realizado com sucesso` }, setMessageRequest, 1500);
+      
+               // Adiciona dados do usuário a sessão
+               navigation.navigate('SignIn', res);
+               setName('');
+               setEmail('');
+               setPassword('');
+      
+           })
+         } catch (error) {
+           console.log(error);
+         }
+
+            // Não há navegação no React, precisa ser tratado de outra forma, routers elinks
     }
     
     const validatePassword = () => {
