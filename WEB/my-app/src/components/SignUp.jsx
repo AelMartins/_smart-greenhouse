@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../utils/api';
 
 const SignUp = () => {
     const [name, setName] = useState('');
@@ -6,14 +8,16 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [confirmedPassword, setConfirmedPassword] = useState('');
     const [messageRequest, setMessageRequest] = useState(null);
-
+    const navigate = useNavigate();
+    
     const defineMessage = (message, set, time = 2500) => {
         set(message)
         setTimeout(() => set(''), time)
         console.log(JSON.stringify(message))
     }
-
+    
     const handleSignUp = async () => {
+        // Validação de campos preenchidos
         if (name === '' || email === '' || password === '') {
             defineMessage({
                 message: 'Preencha os campos corretamente',
@@ -24,9 +28,10 @@ const SignUp = () => {
             }, setMessageRequest)
             return
         }
-
+        
         const passwordValidated = validatePassword()
-
+        
+        // Tratativa de confirmação de senha
         if (!passwordValidated.valid) {
             defineMessage({
                 message: 'Senha inválida. Preencha os requisitos',
@@ -35,17 +40,21 @@ const SignUp = () => {
             }, setMessageRequest)
             return
         }
-
+        
         setMessageRequest({ message: 'Carregando...' })
-
-        // Simulando a requisição para evitar erro
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        defineMessage({ message: 'Usuário cadastrado com sucesso!', error: false }, setMessageRequest)
-
-        // setTimeout(() => navigation.navigate('SignIn'), 1500) // Não há navegação no React, precisa ser tratado de outra forma
+        
+        await api.post('/users', { name, email, password })
+        .then(res => {
+            defineMessage({ message: res.message, error: false }, setMessageRequest) // Exibe mensage de sucesso
+            
+            // Redirecionamento tela de Login
+            setTimeout(() => navigate('/SignIn'), 1500)
+        })
+        .catch(err => {
+            defineMessage({ message: err?.response?.data?.message || 'Erro ao cadastrar usuário', error: true, email: !err.email }, setMessageRequest)
+        })
     }
-
+    
     const validatePassword = () => {
         const result = { 
             valid: false,
@@ -71,66 +80,68 @@ const SignUp = () => {
             defineMessage(null, setMessageRequest)
             result.passwordsMatch = true
         }
-
+        
         result.valid = Object.values(result.resume).every(value => value === true) && result.passwordsMatch === true
         return result
     }
-
+    
     useEffect(() => {
         if (confirmedPassword !== '') {
             const timer = setTimeout(validatePassword, 500)
             return () => clearTimeout(timer)
         }
     }, [password, confirmedPassword])
-
+    
+    
+    
     const messageUserInput = (type) => {
         return type ? 'error' : 'input';
     }
-
+    
     return (
         <div style={styles.container}>
-            <p style={styles.registerText}>
-                Acompanhe o crescimento do seu jardim!
-                <span style={{ fontSize: 18, color: '#78d600', }}>Cadastre-se</span> e monitore o crescimento das suas plantinhas.
-            </p>
-
-            <input
-                className={messageRequest?.name && messageUserInput(messageRequest?.error)}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Nome"
-            />
-
-            <input
-                className={messageRequest?.email && messageUserInput(messageRequest?.error)}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="E-mail"
-            />
-
-            <input
-                className={messageRequest?.password && messageUserInput(messageRequest?.error)}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Senha"
-                type="password"
-            />
-
-            <input
-                className={messageRequest?.confirmedPassword && messageUserInput(messageRequest?.error)}
-                value={confirmedPassword}
-                onChange={(e) => setConfirmedPassword(e.target.value)}
-                placeholder="Confirme sua Senha"
-                type="password"
-            />
-
-            <p style={messageRequest?.error ? styles.errorText : styles.loadingRequestText}>{messageRequest?.message || ''}</p>
-
-            <div style={styles.buttonCard}>
-                <button style={styles.button} onClick={handleSignUp}>
-                    Cadastre-se
-                </button>
-            </div>
+        <p style={styles.registerText}>
+        Acompanhe o crescimento do seu jardim!
+        <span style={{ fontSize: 18, color: '#78d600', }}>Cadastre-se</span> e monitore o crescimento das suas plantinhas.
+        </p>
+        
+        <input
+        className={messageRequest?.name && messageUserInput(messageRequest?.error)}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Nome"
+        />
+        
+        <input
+        className={messageRequest?.email && messageUserInput(messageRequest?.error)}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="E-mail"
+        />
+        
+        <input
+        className={messageRequest?.password && messageUserInput(messageRequest?.error)}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Senha"
+        type="password"
+        />
+        
+        <input
+        className={messageRequest?.confirmedPassword && messageUserInput(messageRequest?.error)}
+        value={confirmedPassword}
+        onChange={(e) => setConfirmedPassword(e.target.value)}
+        placeholder="Confirme sua Senha"
+        type="password"
+        />
+        
+        <p style={messageRequest?.error ? styles.errorText : styles.loadingRequestText}>{messageRequest?.message || ''}</p>
+        
+        <div style={styles.buttonCard}>
+        <button style={styles.button} onClick={handleSignUp}>
+        Cadastre-se
+        </button>
+        </div>
         </div>
     )
 }

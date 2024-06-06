@@ -1,21 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import { BrowserRouter as Router} from 'react-router-dom';
 import './index.css';
-import InfoPlanta from './components/InfoPlanta';
 import reportWebVitals from './reportWebVitals';
-import DataPlant from './components/DataPlant';
-import Navbar from './components/Navbar';
-import SignIn from './components/SigIn';
-import SignUp from './components/SigUp';
-import Home from './components/Home';
+import AppBar from './components/AppBar';
+import App from './App';
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Router>
-      <Navbar/>
+      <AppBar/>
+      <App />
     </Router>
-    <Home/>
   </React.StrictMode>
 );
 

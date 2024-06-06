@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Container, TextField, Button, Typography, Card, CardContent, Box } from '@mui/material';
+import { Container, TextField, Button, Typography, Card, CardContent } from '@mui/material';
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../images/background.jpg';
+import api from '../utils/api';
 
 const ImageBackground = styled('div')({
   backgroundImage: `url(${backgroundImage})`,
@@ -51,18 +52,18 @@ const CustomButton = styled(Button)(({ type, theme }) => ({
   },
 }));
 
-const ErrorText = styled(Typography)({
-  color: 'red',
-  marginBottom: '10px',
-});
+// const ErrorText = styled(Typography)({
+//   color: 'red',
+//   marginBottom: '10px',
+// });
 
-const LoadingText = styled(Typography)({
-  fontSize: '18px',
-  color: '#78d600',
-  fontWeight: 'bold',
-  textShadow: '2px 2px 4px black',
-  marginBottom: '10px',
-});
+// const LoadingText = styled(Typography)({
+//   fontSize: '18px',
+//   color: '#78d600',
+//   fontWeight: 'bold',
+//   textShadow: '2px 2px 4px black',
+//   marginBottom: '10px',
+// });
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -78,23 +79,27 @@ const SignIn = () => {
 
   const handleSignIn = async () => {
     if (!email || !password) {
-      defineMessage({ error: true, msg: 'Preencha os campos corretamente' }, setMessageRequest);
-      return;
+        defineMessage({ error: true, msg: 'Preencha os campos corretamente' }, setMessageRequest)
+        return
     }
 
-    setMessageRequest({ msg: 'Carregando...' });
+    setMessageRequest({ msg: 'Carregando...' })
 
-    // Simulando uma requisição de API
-    setTimeout(() => {
-      defineMessage({ msg: 'Login realizado com sucesso' }, setMessageRequest, 1500);
-      navigate('/home');
-      setEmail('');
-      setPassword('');
-    }, 1500);
-  };
+    await api.post(`/users/login`, { email, password })
+        .then(async res => {
+            defineMessage({ msg: `Login realizado com sucesso` }, setMessageRequest, 1500)
+
+            // Adiciona dados do usuário a sessão
+            navigate('/HomUser', res)
+            setEmail('')
+            setPassword('')
+
+        })
+        .catch(err => defineMessage({ error: true, msg: err?.response?.data?.message || 'Erro ao realizar Login' }, setMessageRequest))
+};
 
   const handleSignUp = () => {
-    navigate('/signup');
+    navigate('/signUp');
   };
 
   return (

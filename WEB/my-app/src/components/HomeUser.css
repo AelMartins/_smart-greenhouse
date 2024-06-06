@@ -1,0 +1,130 @@
+.background {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+}
+
+.container {
+    background-color: #eee;
+    width: 95%;
+    margin: auto;
+}
+
+.navibar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: white;
+}
+
+.button-navibar {
+    border-radius: 15px;
+    background-color: #78d600;
+    color: white;
+    padding: 10px 20px;
+}
+
+.list-plants {
+    margin-top: 20px;
+}
+
+.plant-card {
+    margin: 5px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.text-style {
+    font-size: 14px;
+    color: #000;
+    font-weight: bold;
+    text-align: center;
+}
+
+.title {
+    font-size: 20px;
+}
+
+.loading, .no-plants {
+    font-size: 18px;
+    color: #777;
+    margin-top: 25px;
+    text-align: center;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 35px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.modal-text {
+    font-size: 16px;
+    color: #000;
+    margin-bottom: 15px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button {
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin: 10px;
+}
+
+.cancel {
+    background-color: #fff;
+    color: red;
+    border: 2px solid red;
+}
+
+.delete {
+    background-color: red;
+    color: white;
+}
+
+.add {
+    background-color: #78d600;
+    color: white;
+}
+
+.text-input {
+    border: 3px solid rgba(0, 0, 0, 0.2);
+    background-color: #ddd;
+    padding: 10px;
+    width: 60%;
+    margin-bottom: 10px;
+}
+
+.error-input {
+    border-color: red;
+}
+
+.error-text {
+    color: red;
+    font-size: 16px;
+}
+
+.loading-request-text {
+    font-size: 16px;
+    color: #78d600;
+}
