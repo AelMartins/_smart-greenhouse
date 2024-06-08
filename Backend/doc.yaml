@@ -215,7 +215,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Detalhes do usuário
+          description: Deleta usuário
           content:
             application/json:
               schema:
@@ -285,6 +285,502 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
+  /plants:
+    get:
+      tags:
+        - Plants
+      summary: Todas as Plantas
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          description: Filtrar plantas pelo ID
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Filtrar plantas pelo Nome
+        - in: query
+          name: user_id
+          schema:
+            type: string
+          description: Filtrar plantas pelo ID do usuário
+      responses:
+        "200":
+          description: Lista de plantas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    example: 1
+                  message:
+                    type: string
+                    example: "Plantas encontradas com sucesso!"
+                  result:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Plants"
+    post:
+      tags:
+        - Plants
+      summary: Criar nova planta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  example: "665fb82b4942faa47fa0a141"
+                name:
+                  example: "Rosa"
+      responses:
+        "201":
+          description: Insere nova planta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    example: "Planta cadastrada com sucesso!"
+                  result:
+                    $ref: "#/components/schemas/Plants"
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
+        "409":
+          description: Planta já cadastrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - Plants
+      summary: Atualizar Planta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  example: "665fd65e94c9549e3b8c5bca"
+                name:
+                  example: "Rosa Vermelha"
+      responses:
+        "200":
+          description: Atualiza dados da planta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    example: "Planta atualizada com sucesso!"
+                  result:
+                    $ref: "#/components/schemas/Plants"
+
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
+
+  /plants/{id}:
+    get:
+      tags:
+        - Plants
+      summary: Obtém uma planta específica
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Detalhes da planta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    example: "Planta encontrada com sucesso!"
+                  result:
+                    $ref: "#/components/schemas/Plants"
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
+        "404":
+          description: Planta não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - Plants
+      summary: Deleta registro da planta especificada
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deleta planta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    example: "Planta deletada com sucesso!"
+                  result:
+                    type: object
+                    properties:
+                      id:
+                        example: "665fd65e94c9549e3b8c5bca"
+                      name:
+                        example: "Rosa"
+                      user_id:
+                        example: "665fb82b4942faa47fa0a141"
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
+
+  /data-plants:
+    get:
+      tags:
+        - DataPlants
+      summary: Todos os dados de Plantas
+      parameters:
+        - in: query
+          name: plant_id
+          schema:
+            type: string
+          description: Filtrar dados pelo ID da planta
+        - in: query
+          name: illumination
+          schema:
+            type: string
+          description: Filtrar dados por Iluminação
+        - in: query
+          name: celsius
+          schema:
+            type: string
+          description: Filtrar dados por Temperatura
+        - in: query
+          name: humidity
+          schema:
+            type: string
+          description: Filtrar dados por Umidade
+        - in: query
+          name: weight
+          schema:
+            type: string
+          description: Filtrar dados por Peso
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: Ordenar dados pelo campo especificado
+        - in: query
+          name: order_type
+          schema:
+            type: string
+          description: Tipo de ordenação (Ascendente/Decrescente)
+      responses:
+        "200":
+          description: Lista de todos os dados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    example: 1
+                  message:
+                    type: string
+                    example: "Dados encontrados com sucesso!"
+                  result:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/DataPlants"
+    post:
+      tags:
+        - DataPlants
+      summary: Criar novo registro de Dados de Planta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                plant_id:
+                  example: "665fd65e94c9549e3b8c5bca"
+                illumination:
+                  example: 95
+                celsius:
+                  example: 22.4
+                humidity:
+                  example: 60
+                weight:
+                  example: 265
+      responses:
+        "201":
+          description: Insere novos dados de planta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    example: "Dados cadastrados com sucesso!"
+                  result:
+                    $ref: "#/components/schemas/DataPlants"
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
+
+  /data-plants/{plant_id}:
+    get:
+      tags:
+        - DataPlants
+      summary: Obtém dados de uma planta específica
+      parameters:
+        - name: plant_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: order
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - created_at
+              - illumination
+              - celsius
+              - humidity
+              - weight
+      responses:
+        "200":
+          description: Detalhes dos dados da planta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    example: 1
+                  message:
+                    example: "Dados encontrados com sucesso!"
+                  result:
+                    $ref: "#/components/schemas/DataPlants"
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
+        "404":
+          description: Planta não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /data-plants/last-data/{plant_id}:
+    get:
+      tags:
+        - DataPlants
+      summary: Obtém últimos dados da planta
+      parameters:
+        - name: plant_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Dados mais recentes da planta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    example: "Últimos dados encontrado!"
+                  result:
+                    type: object
+                    properties:
+                      illumination:
+                        type: object
+                        properties:
+                          value:
+                            example: 95
+                          created_at:
+                            example: "2024-06-05T00:58:19.322Z"
+                          updated_at:
+                            example: "2024-06-05T00:58:19.322Z"
+                      celsius:
+                        type: object
+                        properties:
+                          value:
+                            example: 22.4
+                          created_at:
+                            example: "2024-06-05T00:58:19.322Z"
+                          updated_at:
+                            example: "2024-06-05T00:58:19.322Z"
+                      humidity:
+                        type: object
+                        properties:
+                          value:
+                            example: 60
+                          created_at:
+                            example: "2024-06-05T00:58:19.322Z"
+                          updated_at:
+                            example: "2024-06-05T00:58:19.322Z"
+                      weight:
+                        type: object
+                        properties:
+                          value:
+                            example: 265
+                          created_at:
+                            example: "2024-06-05T00:58:19.322Z"
+                          updated_at:
+                            example: "2024-06-05T00:58:19.322Z"
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
+
+  /data-plants/chart/{type_data}:
+    get:
+      tags:
+        - DataPlants
+      summary: Obtém todos os registros do tipo de dado especificado
+      parameters:
+        - name: type_data
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: plant_id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Registros do tipo de dado buscado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    example: "Dados encontrados com sucesso!"
+                  result:
+                    type: object
+                    properties:
+                      labels:
+                        type: array
+                        example:
+                          - Dom
+                          - Seg
+                          - Ter
+                          - Qua
+                          - Qui
+                          - Sex
+                          - Sab
+                      data:
+                        type: array
+                        example:
+                          - 26.7
+                          - 28.2
+                          - 33.1
+                          - 40
+                          - 38.3
+                          - 37.1
+                          - 35.3
+                          - 26.9
+                          - 32.5
+                          - 25.9
+                          - 31.3
+                          - 24.3
+                          - 29.7
+                          - 20
+                          - 27.1
+                          - 18.2
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
+
+  /data-plants/{id}:
+    delete:
+      tags:
+        - DataPlants
+      summary: Deleta registro de dados
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deleta dados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    example: "Dados deletados com sucesso!"
+                  result:
+                    $ref: "#/components/schemas/DataPlants"
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
 
 components:
   schemas:
@@ -368,7 +864,7 @@ components:
       properties:
         message:
           type: string
-          example: "Mensagem do erro"
+          example: "Error message"
 
     CommonError:
       type: object
