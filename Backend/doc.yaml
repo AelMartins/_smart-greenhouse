@@ -1,0 +1,384 @@
+openapi: 3.0.0
+info:
+  title: Smart GreenHouse API
+  description: API para gerenciamento de tarefas.
+  version: 1.0.0
+
+servers:
+  - url: https://p29ply-4000.csb.app
+    description: API hospedada CodeSandbox
+
+paths:
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Todos os Usuários
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          description: Filtrar usuários pelo ID
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Filtrar usuários pelo Nome
+        - in: query
+          name: email
+          schema:
+            type: string
+          description: Filtrar usuários pelo E-mail
+      responses:
+        "200":
+          description: Lista de usuários
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    example: 1
+                  message:
+                    type: string
+                    example: "Usuários encontrados com sucesso!"
+                  result:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Users"
+    post:
+      tags:
+        - Users
+      summary: Criar novo Usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  example: "João Pedro"
+                email:
+                  example: "joao@teste.com"
+                password:
+                  example: "jp123"
+      responses:
+        "201":
+          description: Insere novo usuário
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    example: "Usuário cadastrado com sucesso!"
+                  result:
+                    type: object
+                    properties:
+                      id:
+                        example: "665fb82b4942faa47fa0a141"
+                      name:
+                        example: "João Pedro"
+                      email:
+                        example: "joao@teste.com"
+                      created_at:
+                        example: "2024-06-05T00:58:19.322Z"
+                      updated_at:
+                        example: "2024-06-05T00:58:19.322Z"
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
+        "409":
+          description: E-mail já cadastrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - Users
+      summary: Atualizar Usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: "665fb82b4942faa47fa0a141"
+                name:
+                  type: string
+                  example: "João Pedro"
+                email:
+                  type: string
+                  example: "joao@teste.com"
+                password:
+                  type: string
+                  example: "jp123"
+      responses:
+        "200":
+          description: Atualiza dados do usuário
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    example: "Usuário atualizado com sucesso!"
+                  result:
+                    type: object
+                    properties:
+                      name:
+                        example: "João Pedro"
+                      email:
+                        example: "joao@teste.com"
+                      created_at:
+                        example: "2024-06-05T00:58:19.322Z"
+                      updated_at:
+                        example: "2024-06-05T00:58:19.322Z"
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
+
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Obtém um usuário específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Detalhes do usuário
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "665fb82b4942faa47fa0a141"
+                  name:
+                    type: string
+                    example: "João Pedro"
+                  email:
+                    type: string
+                    example: "joao@teste.com"
+                  created_at:
+                    type: string
+                    format: date
+                    example: "2024-06-05T00:58:19.322Z"
+                  updated_at:
+                    type: string
+                    format: date
+                    example: "2024-06-05T00:58:19.322Z"
+                  plants:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Plants"
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
+        "404":
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - Users
+      summary: Deleta registro do usuário especificado
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Detalhes do usuário
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    example: "Usuário deletado com sucesso!"
+                  result:
+                    type: object
+                    properties:
+                      id:
+                        example: "665fb82b4942faa47fa0a141"
+                      name:
+                        example: "João Pedro"
+                      email:
+                        example: "joao@teste.com"
+
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
+
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: Criar novo Usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  example: "joao@teste.com"
+                password:
+                  example: "jp123"
+      responses:
+        "200":
+          description: O login foi realizado com sucesso!
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    example: "665fb82b4942faa47fa0a141"
+                  name:
+                    example: "João Pedro"
+                  email:
+                    example: "joao@teste.com"
+                  created_at:
+                    example: "2024-06-05T00:58:19.322Z"
+                  updated_at:
+                    example: "2024-06-05T00:58:19.322Z"
+        "400":
+          description: Erro comum
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CommonError"
+        "401":
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Users:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "665fb82b4942faa47fa0a141"
+        name:
+          type: string
+          example: "João Pedro"
+        email:
+          type: string
+          example: "joao@teste.com"
+        password:
+          type: string
+          example: "jp123"
+        created_at:
+          type: string
+          format: date
+          example: "2024-06-05T00:58:19.322Z"
+        updated_at:
+          type: string
+          format: date
+          example: "2024-06-05T00:58:19.322Z"
+
+    Plants:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "665fd65e94c9549e3b8c5bca"
+        name:
+          type: string
+          example: "Rosa"
+        user_id:
+          type: string
+          example: "665fb82b4942faa47fa0a141"
+        created_at:
+          type: string
+          format: date
+          example: "2024-06-05T00:58:19.322Z"
+        updated_at:
+          type: string
+          format: date
+          example: "2024-06-05T00:58:19.322Z"
+
+    DataPlants:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "665fd76894c9549e3b8c5bd8"
+        plant_id:
+          type: string
+          example: "665fd65e94c9549e3b8c5bca"
+        illumination:
+          type: integer
+          example: 95
+        celsius:
+          type: integer
+          example: 22.4
+        humidity:
+          type: integer
+          example: 60
+        weight:
+          type: integer
+          example: 265
+        created_at:
+          type: string
+          format: date
+          example: "2024-06-05T00:58:19.322Z"
+        updated_at:
+          type: string
+          format: date
+          example: "2024-06-05T00:58:19.322Z"
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Mensagem do erro"
+
+    CommonError:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: "Bad Request"
+        message:
+          type: string
+          example: "Invalid request payload input"
