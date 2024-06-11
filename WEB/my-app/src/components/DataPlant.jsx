@@ -17,6 +17,7 @@ const DataPlant = (props) => {
             // Simulação de dados
             const res = {
                 result: {
+                    
                     weight: 1500,
                     illumination: 80,
                     celsius: 25,
@@ -24,7 +25,7 @@ const DataPlant = (props) => {
                 }
             };
 
-            let { weight, illumination, celsius, humidity } = res.result;
+            let { plant_name, weight, illumination, celsius, humidity } = res.result;
 
             if (weight < 1000) {
                 weight = `${weight} g`;

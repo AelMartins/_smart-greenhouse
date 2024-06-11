@@ -3,7 +3,6 @@ import { Container, TextField, Button, Typography, Card, CardContent } from '@mu
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../images/background.jpg';
-import { useUser } from '../userContext';
 import '../utils/api';
 
 const api = require('../utils/api');
@@ -55,25 +54,11 @@ const CustomButton = styled(Button)(({ type, theme }) => ({
   },
 }));
 
-// const ErrorText = styled(Typography)({
-//   color: 'red',
-//   marginBottom: '10px',
-// });
-
-// const LoadingText = styled(Typography)({
-//   fontSize: '18px',
-//   color: '#78d600',
-//   fontWeight: 'bold',
-//   textShadow: '2px 2px 4px black',
-//   marginBottom: '10px',
-// });
-
 const SignIn = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [messageRequest, setMessageRequest] = useState(null);
   const [password, setPassword] = useState('');
-  const { setUser } = useUser();
 
   const defineMessage = (message, set, time = 2500) => {
     set(message);
@@ -83,26 +68,30 @@ const SignIn = () => {
 
   const handleSignIn = async () => {
     if (!email || !password) {
-        defineMessage({ error: true, msg: 'Preencha os campos corretamente' }, setMessageRequest)
-        return
+        defineMessage({ error: true, msg: 'Preencha os campos corretamente' }, setMessageRequest);
+        return;
     }
 
-    setMessageRequest({ msg: 'Carregando...' })
+    setMessageRequest({ msg: 'Carregando...' });
 
     await api.post(`/users/login`, { email, password })
         .then(async res => {
-            defineMessage({ msg: `Login realizado com sucesso` }, setMessageRequest, 1500)
-
+            console.log('resposta', res);
+            defineMessage({ msg: `Login realizado com sucesso` }, setMessageRequest, 1500);
+            
             // Adiciona dados do usuário a sessão
-            console.log('resposta: ', res);
-            setUser(res);
+            sessionStorage.setItem('user', JSON.stringify(res));
+            
+            // Dispara evento de storage manualmente
+            window.dispatchEvent(new Event('storage'));
+
             navigate('/HomeUser');
-            setEmail('')
-            setPassword('')
+            setEmail('');
+            setPassword('');
 
         })
-        .catch(err => defineMessage({ error: true, msg: err?.response?.data?.message || 'Erro ao realizar Login' }, setMessageRequest))
-};
+        .catch(err => defineMessage({ error: true, msg: err?.response?.data?.message || 'Erro ao realizar Login' }, setMessageRequest));
+  };
 
   const handleSignUp = () => {
     navigate('/signUp');

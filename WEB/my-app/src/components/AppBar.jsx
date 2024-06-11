@@ -13,12 +13,23 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function MenuAppBar() {
-  const [auth, setAuth] = React.useState(true);
+  const navigate = useNavigate();
+  const [auth, setAuth] = React.useState(!!sessionStorage.getItem('user'));
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleStorageChange = () => {
+      setAuth(!!sessionStorage.getItem('user'));
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -26,6 +37,9 @@ export default function MenuAppBar() {
 
   const handleClose = () => {
     setAnchorEl(null);
+    if (auth) {
+      navigate('/homeUser');
+    }
   };
 
   const toggleDrawer = (open) => (event) => {
@@ -43,13 +57,21 @@ export default function MenuAppBar() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        {['Home', 'Minhas Plantas', 'Login/Cadastro'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton component={Link} to={text === 'Home' ? '/' : text === 'Minhas Plantas' ? '/dataPlant' : '/SignIn'}>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        {auth 
+          ? ['Home', 'Minhas Plantas'].map((text) => (
+              <ListItem key={text} disablePadding>
+                <ListItemButton component={Link} to={text === 'Home' ? '/' : '/homeUser'}>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </ListItem>
+            ))
+          : ['Home', 'Login/Cadastro'].map((text) => (
+              <ListItem key={text} disablePadding>
+                <ListItemButton component={Link} to={text === 'Home' ? '/' : '/SignIn'}>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
       </List>
     </Box>
   );
@@ -106,7 +128,6 @@ export default function MenuAppBar() {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
               </Menu>
             </div>
           )}
