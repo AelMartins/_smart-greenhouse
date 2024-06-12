@@ -29,23 +29,11 @@ const SignUp = () => {
             }, setMessageRequest)
             return
         }
-        
-        const passwordValidated = validatePassword()
-        
-        // Tratativa de confirmação de senha
-        if (!passwordValidated.valid) {
-            defineMessage({
-                message: 'Senha inválida. Preencha os requisitos',
-                error: true,
-                password: false,
-            }, setMessageRequest)
-            return
-        }
 
         setMessageRequest({ message: 'Carregando...' });
 
         try {
-            await api.post(`/users`, { name, email, passwordValidated })
+            await api.post(`/users`, { name, email, password })
                 .then(async res => {
                     defineMessage({ msg: `Cadastro realizado com sucesso` }, setMessageRequest, 1500);
 

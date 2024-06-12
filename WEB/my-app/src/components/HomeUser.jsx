@@ -73,7 +73,9 @@ const HomeUser = (data) => {
   };
 
   const deletePlant = async () => {
+
     try {
+      console.log(selectedPlantDelete.id)
       await api.destroy(`/plants/${selectedPlantDelete.id}`);
       setPlants(plants.filter(plant => plant.id !== selectedPlantDelete.id));
       setModalDeletePlant(false);
