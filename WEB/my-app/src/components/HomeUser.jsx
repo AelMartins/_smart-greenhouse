@@ -84,10 +84,12 @@ const HomeUser = (data) => {
   };
 
   const handlerDataPlant = (plant_id, plant_name) => {
-    // console.log('plant_id: ', plant_id);
-    // console.log('plant_name: ', plant_name);
-    setPlants({ plant_id, plant_name });
-    navigate(`/dataPlant`, { plant_id, plant_name });
+
+    sessionStorage.setItem('plant_id', plant_id);
+    sessionStorage.setItem('plant_name', plant_name);
+
+
+    navigate(`/dataPlant`);
   }
 
   const renderItem = (item) => (

@@ -1,72 +1,153 @@
-/* DataPlant.css */
+
 
 .container {
-  max-width: 800px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  background-color: #3EAF33; 
+  border-radius: 20px; 
+  width: 90%;
+  max-width: 1200px; 
   padding: 20px;
-  font-family: Arial, sans-serif;
-  background-color: #173f27; /* Fundo verde escuro */
-  color: #fff; /* Texto branco */
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
+  color: white;
   font-size: 24px;
-  font-weight: bold;
   margin-bottom: 20px;
-  text-align: center;
 }
 
 .panel {
   display: flex;
-  align-items: center;
-  background-color: #285f3c; /* Fundo verde escuro mais intenso */
-  border-radius: 5px;
+  flex-direction: row; 
+  background-color: greenyellow;
+  border-radius: 15px;
   padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  width: 100%;
+  max-width: 1000px; 
+  box-sizing: border-box;
 }
 
 .imageContainer {
-  margin-right: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center;
 }
 
 .plantImage {
   width: 100px;
   height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
+}
+
+.weightText {
+  font-size: 18px;
+  color: black;
+  margin-top: 10px; 
 }
 
 .infoContainer {
-  flex: 1;
+  flex: 2;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
 }
 
 .dataPlant {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin: 10px 0;
 }
 
 .dataPlant img {
-  margin-right: 20px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
 }
 
 .label_text_style {
-  font-size: 16px;
-  color: #fff; /* Texto branco */
-  margin-bottom: 10px;
+  font-size: 18px;
+  color: black;
 }
 
 .errorText {
-  font-size: 16px;
   color: red;
-  margin-bottom: 10px;
+  font-size: 18px;
 }
+
+@media (max-width: 768px) {
+  .panel {
+    flex-direction: column; 
+    align-items: center;
+  }
+
+  .imageContainer, .infoContainer {
+    width: 100%;
+    text-align: center;
+  }
+
+  .plantImage {
+    width: 80px;
+    height: 80px;
+  }
+
+  .dataPlant {
+    justify-content: center;
+  }
+
+  .dataPlant img {
+    width: 25px;
+    height: 25px;
+  }
+
+  .label_text_style {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 20px;
+  }
+
+  .panel {
+    padding: 10px;
+  }
+
+  .plantImage {
+    width: 60px;
+    height: 60px;
+  }
+
+  .weightText {
+    font-size: 16px;
+  }
+
+  .dataPlant img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .label_text_style {
+    font-size: 14px;
+  }
+}
+
+.button {
+  margin-top: 20px; /* Espaçamento acima do botão */
+  padding: 10px 20px; /* Espaçamento interno do botão */
+  font-size: 16px; /* Tamanho da fonte do botão */
+  background-color: #3EAF33; /* Cor de fundo do botão */
+  color: white; /* Cor do texto do botão */
+  border: none; /* Remove a borda do botão */
+  border-radius: 5px; /* Borda arredondada do botão */
+  cursor: pointer; /* Mostra uma mão ao passar o mouse sobre o botão */
+}
+
+.button:hover {
+  background-color: #36a832; /* Altera a cor de fundo ao passar o mouse sobre o botão */
+}
+

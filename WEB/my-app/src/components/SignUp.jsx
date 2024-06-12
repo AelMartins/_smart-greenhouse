@@ -30,26 +30,25 @@ const SignUp = () => {
             return
         }
         
-        // const passwordValidated = validatePassword()
+        const passwordValidated = validatePassword()
         
         // Tratativa de confirmação de senha
-        // if (!passwordValidated.valid) {
-        //     defineMessage({
-        //         message: 'Senha inválida. Preencha os requisitos',
-        //         error: true,
-        //         password: false,
-        //     }, setMessageRequest)
-        //     return
-        // }
+        if (!passwordValidated.valid) {
+            defineMessage({
+                message: 'Senha inválida. Preencha os requisitos',
+                error: true,
+                password: false,
+            }, setMessageRequest)
+            return
+        }
 
         setMessageRequest({ message: 'Carregando...' });
 
-        // Simulando a requisição para evitar erro
         try {
-            await api.post(`/users`, { name, email, password })
+            await api.post(`/users`, { name, email, passwordValidated })
                 .then(async res => {
                     defineMessage({ msg: `Cadastro realizado com sucesso` }, setMessageRequest, 1500);
-                    // Adiciona dados do usuário a sessão
+
                     navigate('/SignIn', res);
                     setName('');
                     setEmail('');
@@ -60,42 +59,43 @@ const SignUp = () => {
         }
     }
     
-    // const validatePassword = () => {
-    //     const result = { 
-    //         valid: false,
-    //         passwordsMatch: false,
-    //         resume: {
-    //             hasLowerCase: /[a-z]/.test(password),
-    //             hasUpperCase: /[A-Z]/.test(password),
-    //             hasNumber: /\d/.test(password),
-    //             hasSpecialChar: /[@$!%*?&]/.test(password),
-    //             hasMinLength: password.length >= 6,
-    //         },
-    //     }
+    const validatePassword = () => {
+        const result = { 
+            valid: false,
+            passwordsMatch: false,
+            resume: {
+                hasLowerCase: /[a-z]/.test(password),
+                hasUpperCase: /[A-Z]/.test(password),
+                hasNumber: /\d/.test(password),
+                hasSpecialChar: /[@$!%*?&]/.test(password),
+                hasMinLength: password.length >= 6,
+            },
+        }
         
-    //     if (password !== confirmedPassword) {
-    //         defineMessage({
-    //             message: 'As senhas não coincidem',
-    //             error: true,
-    //             password: false,
-    //             confirmedPassword: false
-    //         }, setMessageRequest)
+        if (password !== confirmedPassword) {
+            defineMessage({
+                message: 'As senhas não coincidem',
+                error: true,
+                password: false,
+                confirmedPassword: false
+            }, setMessageRequest)
             
-    //     } else {
-    //         defineMessage(null, setMessageRequest)
-    //         result.passwordsMatch = true
-    //     }
+        } else {
+            defineMessage(null, setMessageRequest)
+            result.passwordsMatch = true
+        }
         
-    //     result.valid = Object.values(result.resume).every(value => value === true) && result.passwordsMatch === true
-    //     return result
-    // }
+        result.valid = Object.values(result.resume).every(value => value === true) && result.passwordsMatch === true
+        console.log('result', result);
+        return result
+    }
     
-    // useEffect(() => {
-    //     if (confirmedPassword !== '') {
-    //         const timer = setTimeout(validatePassword, 500)
-    //         return () => clearTimeout(timer)
-    //     }
-    // }, [password, confirmedPassword])
+    useEffect(() => {
+        if (confirmedPassword !== '') {
+            const timer = setTimeout(validatePassword, 500)
+            return () => clearTimeout(timer)
+        }
+    }, [password, confirmedPassword])
     
     const messageUserInput = (type) => {
         return type ? 'error' : 'input';

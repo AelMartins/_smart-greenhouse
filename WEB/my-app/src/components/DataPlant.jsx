@@ -1,48 +1,51 @@
 import React, { useEffect, useState } from 'react';
-import lightningImage from '../images/home_page/ligthning.png'; // Importa a imagem diretamente
-import plantImage from '../images/home_page/plant.png'; // Importa a imagem diretamente
-import sensorImage from '../images/home_page/sensor.png'; // Importa a imagem diretamente
-import thermometerImage from '../images/home_page/thermometer.png'; // Importa a imagem diretamente
+import lightningImage from '../images/home_page/ligthning.png';
+import plantImage from '../images/home_page/plant.png';
+import sensorImage from '../images/home_page/sensor.png';
+import thermometerImage from '../images/home_page/thermometer.png';
+import { useNavigate } from 'react-router-dom';
 import './DataPlant.css';
 
+const api = require('../utils/api');
 
-const DataPlant = (props) => {
-    console.log(props)
+const DataPlant = () => {
+
+    const navigate = useNavigate();
+
+    const plant_id = sessionStorage.getItem('plant_id');
+    const plant_name = sessionStorage.getItem('plant_name');
+
+    console.log('plant_id', plant_id);
+    console.log('plant_name', plant_name);
+
     const [dataPlant, setDataPlant] = useState({});
     const [error, setError] = useState(null);
-    const { plant_id, plant_name } = props.route?.params || {};
 
     const fetchData = async () => {
         try {
-            // Simulação de dados
-            const res = {
-                result: {
-                    
-                    weight: 1500,
-                    illumination: 80,
-                    celsius: 25,
-                    humidity: 60
-                }
-            };
+            const res = await api.get(`/data-plants/last-data/${plant_id}`);
+            let { weight, illumination, celsius, humidity } = res.result;
 
-            let { plant_name, weight, illumination, celsius, humidity } = res.result;
-
-            if (weight < 1000) {
-                weight = `${weight} g`;
+            if (Object.values(res.result).every(key => key === null)) {
+                throw new Error('Nenhum dado encontrado');
             } else {
-                const weightInKg = (weight / 1000).toFixed(2);
-                weight = `${weightInKg} kg`;
+                if (weight?.value < 1000) {
+                    weight = weight?.value ? `${weight?.value} g` : '';
+                } else {
+                    const weightInKg = ((weight?.value || 0) / 1000).toFixed(2);
+                    weight = weight?.value ? `${weightInKg} kg` : '';
+                }
+
+                const result = {
+                    weight,
+                    celsius: celsius?.value ? `${celsius?.value}ºC` : '',
+                    humidity: humidity?.value ? `${humidity?.value}% MC` : '',
+                    illumination: illumination?.value ? `${illumination?.value}%` : '',
+                };
+
+                setDataPlant(result);
+                setError(null);
             }
-
-            const result = {
-                weight,
-                illumination: `${illumination}%`,
-                celsius: `${celsius}ºC`,
-                humidity: `${humidity}% MC`
-            };
-
-            setDataPlant(result);
-            setError(null);
         } catch (error) {
             setError(error.message);
             console.error(error.message);
@@ -55,12 +58,17 @@ const DataPlant = (props) => {
         return () => clearInterval(interval);
     }, []);
 
+    const handleGoToGraf = () => {
+        navigate('/graf'); // Redireciona para a rota '/graf'
+    };
+
     return (
         <div className="container">
             <h1>{plant_name}</h1>
             <div className="panel">
                 <div className="imageContainer">
                     <img src={plantImage} alt="Plant" className="plantImage" />
+                    <p className="weightText">{dataPlant.weight}</p>
                 </div>
                 <div className="infoContainer">
                     <div className="dataPlant">
@@ -79,15 +87,9 @@ const DataPlant = (props) => {
                             <p className="label_text_style">{dataPlant.humidity}</p>
                         )}
                     </div>
-                    <div className="dataPlant">
-                        {error ? (
-                            <p className="errorText">{error}</p>
-                        ) : (
-                            <p className="label_text_style">{dataPlant.weight}</p>
-                        )}
-                    </div>
                 </div>
             </div>
+            <button className="button" onClick={handleGoToGraf}>Ver Gráfico</button> {/* Botão para a rota '/graf' */}
         </div>
     );
 };
