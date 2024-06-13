@@ -1,10 +1,10 @@
-const api = require('../utils/api')
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-const { screenWidth, screenHeight } = require('../utils/dimensions');
 import { Container, ButtonCard, Button, ButtonText } from '../Styles';
 import { StyleSheet, Appearance, TextInput, Text } from 'react-native';
 
+const api = require('../utils/api')
+const { screenWidth, screenHeight } = require('../utils/dimensions');
 const colorTextInput = Appearance.getColorScheme() === 'dark' ? '#000' : '#000'
 
 const SignUp = () => {

@@ -1,10 +1,9 @@
 import { useState } from 'react';
-const api = require('../utils/api')
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, ImageBackground, Text, } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Container, ButtonCard, Button, ButtonText, TextInput, LabelText } from '../Styles';
 
+const api = require('../utils/api')
 
 const SignIn = () => {
     const navigation = useNavigation();

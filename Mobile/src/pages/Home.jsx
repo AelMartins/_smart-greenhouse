@@ -1,8 +1,7 @@
+import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import React, { useEffect, useState } from 'react';
 import { Container, Card, LabelText, TextInput } from '../Styles';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native';
 
 const api = require('../utils/api');
@@ -75,7 +74,7 @@ const Home = (data) => {
 
             await api.post('/plants', {
                 user_id: user?.id,
-                name: newPlantName,
+                name: newPlantName.trim(),
             }).then(res => defineMessage({ msg: `${newPlantName} adicionada com sucesso` }, setMessageNewPlant, 1500))
 
             // Atualizar a lista de plantas

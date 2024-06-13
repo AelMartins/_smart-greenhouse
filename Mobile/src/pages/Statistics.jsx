@@ -1,11 +1,11 @@
-const api = require('../utils/api');
 import React, { useState, useEffect } from 'react';
 import { LineChart } from 'react-native-chart-kit';
-import { Container, Header } from '../Styles';
+import { Container, Header, Card } from '../Styles';
 import { Picker } from '@react-native-picker/picker';
-import { StyleSheet, Text, View } from 'react-native';
-const { screenWidth, screenHeight } = require('../utils/dimensions');
+import { StyleSheet, Text, View, TouchableOpacity, Linking } from 'react-native';
 
+const api = require('../utils/api');
+const { screenWidth, screenHeight } = require('../utils/dimensions');
 
 
 const Statistics = (data) => {
@@ -32,10 +32,10 @@ const Statistics = (data) => {
             await api.get(`/data-plants/chart/${selectedChartData}?plant_id=${plant_id}`)
                 .then(res => {
 
-                    if (res.result.data.length > 0) {
+                    if (res?.result?.data?.length > 0) {
                         setDataChart({
-                            labels: res.result.labels || defaultDataChart.labels,
-                            datasets: res.result.data.length > 0 ? [{ data: res.result.data }] : defaultDataChart.datasets
+                            labels: res?.result?.labels || defaultDataChart.labels,
+                            datasets: res?.result?.data?.length > 0 ? [{ data: res.result.data }] : defaultDataChart.datasets
                         })
                         setMessage(null)
 
@@ -65,8 +65,9 @@ const Statistics = (data) => {
 
     // Define tipo de Dado exibido no Gráfico
     const handlePickerChange = async (itemValue) => {
-        setSelectedChartData(itemValue)
         setLoading(true)
+        setSelectedChartData(itemValue)
+        await new Promise(resolve => setTimeout(resolve, 100))
 
 
         let inProgressFetchData
@@ -86,6 +87,11 @@ const Statistics = (data) => {
             />
         ))
     }
+
+    const handleShowMorePress = () => {
+        const url = 'https://app.powerbi.com/groups/me/reports/4206af16-2276-406f-9c09-94818f830948/ReportSection?experience=power-bi'; // Substitute with the desired URL
+        Linking.openURL(url).catch((err) => console.error('Failed to open URL:', err));
+    };
 
 
     return (
@@ -135,6 +141,12 @@ const Statistics = (data) => {
 
                     style={styles.line_chart}
                 />
+
+                <TouchableOpacity style={styles.showMoreButton} activeOpacity={1} onPress={handleShowMorePress}>
+                    <Card style={styles.frontCardPlant}>
+                        <Text style={styles.textStyle}>Mais Estatísticas</Text>
+                    </Card>
+                </TouchableOpacity>
             </Container>
         </Container>
     );
@@ -196,6 +208,26 @@ const styles = StyleSheet.create({
     line_chart: {
         borderRadius: 10,
         backgroundColor: 'rgba(0,0,0,0)',
+    },
+    showMoreButton: {
+        position: 'absolute',
+        bottom: 50,
+        left: '50%',
+        transform: [{ translateX: -screenWidth * 0.2 }],
+    },
+    frontCardPlant: {
+        elevation: 3,
+        borderRadius: 50,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        width: screenWidth * 0.4,
+        height: screenHeight * 0.05,
+    },
+    textStyle: {
+        fontSize: 16,
+        color: '#78d600',
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
 });
 
